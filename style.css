@@ -885,31 +885,39 @@ html, body {
 
 
 
-/* --- Solar System Orbit --- */
-.solar-system-orbit {
+/* --- Solar System Orbits --- */
+.sun-orbit, .moon-orbit {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 90vw; /* Orbit diameter */
-  height: 90vw;
-  margin-top: -45vw;
-  margin-left: -45vw;
   border-radius: 50%;
   border: 1px dashed rgba(255, 255, 255, 0.1);
-  animation: orbitRotate 60s linear infinite;
   z-index: 12;
   pointer-events: none;
 }
 
-.orbiting-sun-wrapper, .orbiting-moon {
+.sun-orbit {
+  width: 90vw;
+  height: 90vw;
+  margin-top: -45vw;
+  margin-left: -45vw;
+  animation: orbitRotate 60s linear infinite;
+}
+
+.moon-orbit {
+  width: 70vw; /* Closer to earth */
+  height: 70vw;
+  margin-top: -35vw;
+  margin-left: -35vw;
+  animation: orbitRotate 35s linear infinite; /* Faster rotation */
+}
+
+.orbiting-sun-wrapper {
   position: absolute;
   top: 50%;
   left: 0;
   pointer-events: auto;
-  animation: counterOrbitRotate 60s linear infinite;
-}
-
-.orbiting-sun-wrapper {
+  animation: counterOrbitRotate 60s linear infinite; /* Match sun-orbit speed */
   margin-top: -4vw;
   margin-left: -4vw;
   width: 8vw;
@@ -932,10 +940,14 @@ html, body {
 }
 
 .orbiting-moon {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  pointer-events: auto;
+  animation: counterOrbitRotate 35s linear infinite; /* Match moon-orbit speed */
   width: 4vw;
   height: 4vw;
   margin-top: -2vw;
-  left: 100%; /* Opposite side */
   margin-left: -2vw;
   border-radius: 50%;
   background-image: url('/moon-isolated.png');
