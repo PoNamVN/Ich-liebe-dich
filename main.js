@@ -507,8 +507,9 @@ document.addEventListener("DOMContentLoaded", () => {
           
           gsap.to([loveTextBase, loveTextHead], { opacity: 1, duration: 0.1 });
           
-          // Apply violent screen shake to Earth
-          if (spaceEarth) spaceEarth.classList.add('earth-shaking');
+          // Apply violent screen shake to Earth Wrapper instead of Earth to preserve rotation state
+          const spaceEarthWrapper = document.querySelector('.space-earth-wrapper');
+          if (spaceEarthWrapper) spaceEarthWrapper.classList.add('earth-shaking');
 
           gsap.to([loveTextBase, loveTextHead], {
             strokeDashoffset: 0,
@@ -518,7 +519,7 @@ document.addEventListener("DOMContentLoaded", () => {
               // Fade out the bright plasma head when finished
               gsap.to(loveTextHead, { opacity: 0, duration: 0.5 });
               // Stop the shaking
-              if (spaceEarth) spaceEarth.classList.remove('earth-shaking');
+              if (spaceEarthWrapper) spaceEarthWrapper.classList.remove('earth-shaking');
             }
           });
         }
