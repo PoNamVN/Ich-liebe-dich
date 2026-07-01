@@ -328,11 +328,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // 1. Zoom out/fade out manor elements
       gsap.to(manorElements, {
-        scale: 2.5,
         opacity: 0,
         duration: 1.8,
         ease: "power4.inOut",
         pointerEvents: 'none'
+      });
+      gsap.to({ val: 1 }, {
+        val: 2.5,
+        duration: 1.8,
+        ease: "power4.inOut",
+        onUpdate: function() {
+          manorScale = this.targets()[0].val;
+        }
       });
 
       // 2. Show space overlay
@@ -343,10 +350,15 @@ document.addEventListener("DOMContentLoaded", () => {
       );
 
       // 3. Zoom in Earth from tiny to normal
-      gsap.fromTo('.space-earth-wrapper', 
-        { scale: 0.15, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 2.0, ease: "power3.out", delay: 0.2 }
-      );
+      gsap.to({ val: 0.15 }, {
+        val: 1,
+        duration: 2.0,
+        ease: "power3.out",
+        delay: 0.2,
+        onUpdate: function() {
+          spaceScale = this.targets()[0].val;
+        }
+      });
 
       // 4. Slide up moon surface rocky foreground
       gsap.fromTo('.space-moon-surface-wrapper', 
@@ -383,11 +395,13 @@ document.addEventListener("DOMContentLoaded", () => {
         ease: "power3.in"
       });
 
-      gsap.to('.space-earth-wrapper', {
-        scale: 0.15,
-        opacity: 0,
+      gsap.to({ val: spaceScale }, {
+        val: 0.15,
         duration: 1.2,
-        ease: "power3.in"
+        ease: "power3.in",
+        onUpdate: function() {
+          spaceScale = this.targets()[0].val;
+        }
       });
 
       // 2. Fade out Space Overlay
@@ -401,16 +415,22 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       // 3. Fade in/Restore manor elements to normal
-      gsap.fromTo(manorElements, 
-        { scale: 2.5, opacity: 0 },
-        { 
-          scale: 1, 
-          duration: 1.6, 
-          ease: "power4.out", 
-          clearProps: "scale,opacity,pointerEvents",
-          delay: 0.2
+      gsap.to(manorElements, {
+        opacity: 1,
+        duration: 1.6,
+        ease: "power4.out", 
+        clearProps: "opacity,pointerEvents",
+        delay: 0.2
+      });
+      gsap.to({ val: manorScale }, {
+        val: 1,
+        duration: 1.6,
+        ease: "power4.out",
+        delay: 0.2,
+        onUpdate: function() {
+          manorScale = this.targets()[0].val;
         }
-      );
+      });
     });
   }
 
@@ -451,6 +471,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 // --- 5. Parallax Core Engine (Hardware Accelerated Lerp & Gyroscope) ---
+let manorScale = 1;
+let spaceScale = 0.15;
 const layers = document.querySelectorAll('.layer, .building-group, .fog-group, .title-group, .space-layer');
 
 let targetX = 0;
@@ -502,8 +524,12 @@ function animateParallax() {
     const xOffset = currentX * depth * speedMultiplierX; 
     const yOffset = currentY * depth * speedMultiplierY;
     
-    // Hardware-accelerated translate3d rendering
-    layer.style.transform = `translate3d(${xOffset}px, ${yOffset}px, 0)`;
+    // Check if the layer belongs to space view or manor view
+    const isSpaceLayer = layer.classList.contains('space-layer') || layer.id === 'space-overlay';
+    const currentScale = isSpaceLayer ? spaceScale : manorScale;
+    
+    // Hardware-accelerated translate3d rendering with combined scale
+    layer.style.transform = `translate3d(${xOffset}px, ${yOffset}px, 0) scale(${currentScale})`;
   });
 
   requestAnimationFrame(animateParallax);
