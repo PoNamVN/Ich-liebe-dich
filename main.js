@@ -414,6 +414,69 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
+
+  // --- Magic Space Interactions ---
+  const magicSun = document.getElementById('magic-sun');
+  const loveText = document.querySelector('.love-text');
+
+  if (magicSun && loveText) {
+    magicSun.addEventListener('click', (e) => {
+      // Prevent multiple clicks
+      if (magicSun.classList.contains('spark-fired')) return;
+      magicSun.classList.add('spark-fired');
+
+      // 1. Get Sun position
+      const sunRect = magicSun.getBoundingClientRect();
+      const startX = sunRect.left + sunRect.width / 2;
+      const startY = sunRect.top + sunRect.height / 2;
+
+      // 2. Create Spark
+      const spark = document.createElement('div');
+      spark.className = 'magic-spark';
+      document.getElementById('space-overlay').appendChild(spark);
+
+      gsap.set(spark, {
+        x: startX - 7.5,
+        y: startY - 7.5,
+        scale: 0.5,
+        opacity: 0
+      });
+
+      // 3. Ignite spark
+      gsap.to(spark, { scale: 1, opacity: 1, duration: 0.2 });
+
+      // 4. Target Earth center
+      const endX = window.innerWidth / 2;
+      const endY = window.innerHeight / 2;
+
+      // 5. Fly spark to Earth
+      gsap.to(spark, {
+        x: endX - 7.5,
+        y: endY - 7.5,
+        duration: 1.2,
+        ease: "power2.in",
+        delay: 0.2,
+        onComplete: () => {
+          // Spark explosion
+          gsap.to(spark, {
+            scale: 6,
+            opacity: 0,
+            duration: 0.3,
+            onComplete: () => spark.remove()
+          });
+
+          // 6. Draw "I love u" text
+          gsap.to(loveText, { opacity: 1, duration: 0.2 });
+          gsap.to(loveText, {
+            strokeDashoffset: 0,
+            duration: 4,
+            ease: "power2.inOut"
+          });
+        }
+      });
+    });
+  }
+
 });
 
 

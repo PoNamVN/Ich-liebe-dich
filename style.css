@@ -885,6 +885,115 @@ html, body {
 
 
 
+/* --- Solar System Orbit --- */
+.solar-system-orbit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 90vw; /* Orbit diameter */
+  height: 90vw;
+  margin-top: -45vw;
+  margin-left: -45vw;
+  border-radius: 50%;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  animation: orbitRotate 60s linear infinite;
+  z-index: 12;
+  pointer-events: none;
+}
+
+.orbiting-sun-wrapper, .orbiting-moon {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  pointer-events: auto;
+  animation: counterOrbitRotate 60s linear infinite;
+}
+
+.orbiting-sun-wrapper {
+  margin-top: -4vw;
+  margin-left: -4vw;
+  width: 8vw;
+  height: 8vw;
+  cursor: pointer;
+}
+
+.orbiting-sun {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, #fff, #ffeb3b, #ff9800);
+  box-shadow: 0 0 40px 10px rgba(255, 235, 59, 0.6), 0 0 100px 30px rgba(255, 152, 0, 0.4);
+  transition: box-shadow 0.3s ease;
+}
+
+.orbiting-sun-wrapper:hover .orbiting-sun {
+  box-shadow: 0 0 60px 20px rgba(255, 235, 59, 0.8), 0 0 120px 40px rgba(255, 152, 0, 0.6);
+  animation: sunHoverSpin 2s linear infinite;
+}
+
+.orbiting-moon {
+  width: 4vw;
+  height: 4vw;
+  margin-top: -2vw;
+  left: 100%; /* Opposite side */
+  margin-left: -2vw;
+  border-radius: 50%;
+  background-image: url('/moon-isolated.png');
+  background-size: cover;
+  box-shadow: inset -10px -10px 20px rgba(0,0,0,0.8), 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+@keyframes orbitRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes counterOrbitRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(-360deg); }
+}
+
+@keyframes sunHoverSpin {
+  100% { transform: rotate(360deg) scale(1.1); }
+}
+
+/* --- Fiery SVG Text --- */
+#love-svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 90%;
+  height: 90%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 15;
+}
+
+.love-text {
+  font-family: 'Brush Script MT', 'Dancing Script', cursive;
+  font-size: 70px;
+  fill: transparent;
+  stroke: #ffaa00;
+  stroke-width: 1.5px;
+  filter: drop-shadow(0 0 15px #ff5500) drop-shadow(0 0 25px #ffaa00);
+  stroke-dasharray: 800;
+  stroke-dashoffset: 800;
+  opacity: 0;
+}
+
+/* --- Magic Spark --- */
+.magic-spark {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 30px 15px #ffaa00, 0 0 60px 30px #ff5500;
+  pointer-events: none;
+  z-index: 50;
+  mix-blend-mode: screen;
+}
+
 /* --- New Cinematic Space Layers --- */
 
 .space-nebula {
