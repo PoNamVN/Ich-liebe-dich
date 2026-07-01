@@ -320,42 +320,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
   let isSpaceView = false;
 
-  // Clean moon images on canvas to mathematically remove black background borders
-  const defaultMoonEl = document.querySelector('.moon-bg.default-moon');
-  const autumnMoonEl = document.querySelector('.moon-bg.autumn-moon');
 
-  function cleanMoonImage(imgUrl, element) {
-    if (!element) return;
-    const img = new Image();
-    img.onload = () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = img.width;
-      canvas.height = img.height;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0);
-      
-      const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const data = imgData.data;
-      
-      // Filter out any pixels that are near-black (threshold 22)
-      for (let i = 0; i < data.length; i += 4) {
-        const r = data[i];
-        const g = data[i+1];
-        const b = data[i+2];
-        
-        if (r < 22 && g < 22 && b < 22) {
-          data[i+3] = 0; // Set Alpha to 0
-        }
-      }
-      
-      ctx.putImageData(imgData, 0, 0);
-      element.style.backgroundImage = `url(${canvas.toDataURL()})`;
-    };
-    img.src = imgUrl;
-  }
-
-  cleanMoonImage('/moon-isolated.png', defaultMoonEl);
-  cleanMoonImage('/moon-isolated-autumn.png', autumnMoonEl);
 
   moons.forEach(moon => {
     moon.addEventListener('click', (e) => {
