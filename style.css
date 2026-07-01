@@ -957,7 +957,7 @@ html, body {
   100% { transform: rotate(360deg) scale(1.1); }
 }
 
-/* --- Fiery SVG Text --- */
+/* --- Fiery SVG Text (Lava Scar) --- */
 #love-svg {
   position: absolute;
   top: 50%;
@@ -971,11 +971,13 @@ html, body {
 
 .love-text {
   font-family: 'Brush Script MT', 'Dancing Script', cursive;
-  font-size: 70px;
+  font-size: 80px; /* Made slightly larger */
+  font-weight: bold;
   fill: transparent;
-  stroke: #ffaa00;
-  stroke-width: 1.5px;
-  filter: drop-shadow(0 0 15px #ff5500) drop-shadow(0 0 25px #ffaa00);
+  stroke: #ff3300; /* Deep lava red */
+  stroke-width: 3.5px; /* Thick scar */
+  filter: drop-shadow(0 0 5px #ffeb3b) drop-shadow(0 0 15px #ff5500) drop-shadow(0 0 35px #ff0000);
+  mix-blend-mode: screen; /* Burns into the earth background */
   stroke-dasharray: 800;
   stroke-dashoffset: 800;
   opacity: 0;

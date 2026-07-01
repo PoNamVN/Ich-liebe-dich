@@ -460,6 +460,12 @@ document.addEventListener("DOMContentLoaded", () => {
           spark.remove();
           const spaceOverlay = document.getElementById('space-overlay');
 
+          // Pause Earth Rotation on Impact
+          const spaceEarth = document.querySelector('.space-earth');
+          const spaceEarthClouds = document.querySelector('.space-earth-clouds');
+          if (spaceEarth) spaceEarth.style.animationPlayState = 'paused';
+          if (spaceEarthClouds) spaceEarthClouds.style.animationPlayState = 'paused';
+
           // Flash effect
           const flash = document.createElement('div');
           flash.className = 'explosion-flash';
