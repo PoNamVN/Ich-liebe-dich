@@ -245,13 +245,13 @@ html, body {
 
 .moon-bg {
   position: absolute;
-  width: 25vw;
-  height: 25vw;
-  max-width: 350px;
-  max-height: 350px;
-  min-width: 260px;
-  min-height: 260px;
-  top: 0;
+  width: 22vw;
+  height: 22vw;
+  max-width: 290px;
+  max-height: 290px;
+  min-width: 220px;
+  min-height: 220px;
+  top: 15px;
   left: 50%;
   transform: translate(-50%, 0);
   background-size: contain;
