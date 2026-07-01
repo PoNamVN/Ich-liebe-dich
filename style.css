@@ -869,7 +869,7 @@ html, body {
   box-shadow: inset -45px -45px 90px rgba(0,0,0,0.98),
               inset 15px 15px 35px rgba(255,255,255,0.22);
   z-index: 11;
-  animation: earthRotate 280s linear infinite;
+  animation: earthRotate 120s linear infinite;
   will-change: transform;
 }
 
@@ -883,7 +883,7 @@ html, body {
   width: 125vw;
   height: 48vh;
   left: -12vw;
-  bottom: -10vh;
+  bottom: 0;
   top: auto;
   z-index: 20;
 }
@@ -911,26 +911,32 @@ html, body {
 
 .space-rotating-stars {
   position: absolute;
-  width: 150vw;
-  height: 150vw;
+  width: 300vw;
+  height: 300vw;
   top: 50%;
   left: 50%;
-  margin-top: -75vw;
-  margin-left: -75vw;
+  margin-top: -150vw;
+  margin-left: -150vw;
   border-radius: 50%;
   background-image: 
-    radial-gradient(1.5px 1.5px at 15% 25%, rgba(255,255,255,0.85), transparent),
-    radial-gradient(2px 2px at 35% 45%, rgba(255,255,255,0.95), transparent),
-    radial-gradient(1px 1px at 55% 15%, rgba(255,255,255,0.75), transparent),
-    radial-gradient(2px 2px at 75% 85%, rgba(255,255,255,1), transparent),
-    radial-gradient(1.5px 1.5px at 95% 35%, rgba(255,255,255,0.85), transparent),
-    radial-gradient(1px 1px at 25% 75%, rgba(255,255,255,0.65), transparent),
-    radial-gradient(2px 2px at 85% 65%, rgba(255,255,255,0.9), transparent),
-    radial-gradient(1.5px 1.5px at 45% 95%, rgba(255,255,255,0.8), transparent);
-  background-size: 100% 100%;
-  animation: starsOrbit 150s linear infinite;
+    radial-gradient(circle at 10% 20%, #fff 0%, transparent 1px),
+    radial-gradient(circle at 30% 40%, #fff 0%, transparent 1.5px),
+    radial-gradient(circle at 50% 10%, #fff 0%, transparent 1px),
+    radial-gradient(circle at 70% 80%, #fff 0%, transparent 2px),
+    radial-gradient(circle at 90% 30%, #fff 0%, transparent 1px),
+    radial-gradient(circle at 20% 70%, #fff 0%, transparent 1.5px),
+    radial-gradient(circle at 80% 60%, #fff 0%, transparent 1px),
+    radial-gradient(circle at 40% 90%, #fff 0%, transparent 2px),
+    radial-gradient(circle at 15% 15%, #fff 0%, transparent 1px),
+    radial-gradient(circle at 85% 85%, #fff 0%, transparent 1.5px),
+    radial-gradient(circle at 25% 85%, #fff 0%, transparent 1px),
+    radial-gradient(circle at 75% 15%, #fff 0%, transparent 2px);
+  background-size: 250px 250px;
+  background-repeat: repeat;
+  animation: starsOrbit 400s linear infinite;
   pointer-events: none;
   z-index: 1;
+  opacity: 0.85;
 }
 
 @keyframes starsOrbit {
@@ -980,9 +986,9 @@ html, body {
   width: 25vw;
   height: 25vw;
   left: -10vw;
-  top: -5vh;
+  top: 10vh;
   border-radius: 40% 60% 50% 50% / 40% 40% 60% 50%;
-  filter: blur(12px) brightness(0.25);
+  filter: blur(8px) brightness(0.65);
   transform: rotate(25deg);
   opacity: 0.8;
 }
@@ -991,9 +997,9 @@ html, body {
   width: 35vw;
   height: 35vw;
   right: -15vw;
-  bottom: -10vh;
+  bottom: 0;
   border-radius: 50% 40% 60% 40% / 50% 50% 40% 60%;
-  filter: blur(18px) brightness(0.15);
+  filter: blur(12px) brightness(0.55);
   transform: rotate(-15deg);
   opacity: 0.9;
 }
