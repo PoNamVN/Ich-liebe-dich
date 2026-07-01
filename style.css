@@ -1,0 +1,780 @@
+/* style.css */
+:root {
+  --bg-color: #0c0c0c;
+  --text-color: #eaeaea;
+  --text-muted: #8c8c8c;
+  --accent-color: #d4af37; /* Vintage gold */
+  
+  --font-heading: 'Merriweather', serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-body);
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden; /* Lock viewport */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- Preloader --- */
+#loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--bg-color);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1), 
+              visibility 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+#loader.loaded {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.loader-content {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.loader-emblem {
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  font-weight: 400;
+  letter-spacing: 5px;
+  color: var(--accent-color);
+  position: relative;
+  animation: emblemPulse 2.5s infinite ease-in-out;
+}
+
+.loader-bar-wrap {
+  width: 250px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.loader-bar {
+  width: 0%;
+  height: 100%;
+  background: var(--accent-color);
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation: loaderProgress 3s infinite cubic-bezier(0.65, 0.05, 0.36, 1);
+}
+
+.loader-text {
+  font-size: 0.65rem;
+  letter-spacing: 4px;
+  color: var(--text-muted);
+}
+
+@keyframes emblemPulse {
+  0%, 100% { opacity: 0.25; transform: scale(0.96); }
+  50% { opacity: 1; transform: scale(1.04); }
+}
+
+@keyframes loaderProgress {
+  0% { left: -100%; width: 100%; }
+  50% { left: 0%; width: 10%; }
+  100% { left: 100%; width: 100%; }
+}
+
+/* --- Header / Navbar --- */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 3rem 4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+  mix-blend-mode: difference;
+  pointer-events: none;
+}
+
+.logo {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.6rem;
+  letter-spacing: 3px;
+  color: var(--text-color);
+  pointer-events: auto;
+  text-decoration: none;
+}
+
+.menu {
+  display: flex;
+  gap: 3rem;
+  pointer-events: auto;
+}
+
+.nav-link {
+  color: var(--text-color);
+  text-decoration: none;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0%;
+  height: 1px;
+  background-color: var(--accent-color);
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* --- 3D Parallax Viewport --- */
+#parallax-viewport {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #050508;
+}
+
+/* Layer Core positioning */
+.layer, .building-group, .fog-group {
+  position: absolute;
+  will-change: transform;
+  transform: translate3d(0, 0, 0); /* Force GPU acceleration */
+  pointer-events: none;
+}
+
+.full-sky {
+  width: 110vw;
+  height: 110vh;
+  left: -5vw;
+  bottom: -5vh;
+}
+
+/* --- Sky Background --- */
+.bg-1 {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center bottom;
+  animation: blurCycle 14s infinite ease-in-out;
+  will-change: filter, opacity;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+}
+
+/* Seasonal background images */
+.bg-1.spring-only { background-image: url('https://alfoart.com/images/derionzini-images/background-1.webp'); }
+.bg-1.summer-only { background-image: url('https://alfoart.com/images/derionzini-images/background-1-summer.webp'); }
+.bg-1.autumn-only { background-image: url('https://alfoart.com/images/derionzini-images/background-1-fall.webp'); }
+.bg-1.winter-only { background-image: url('https://alfoart.com/images/derionzini-images/background-1-winter.webp'); }
+
+.spring .bg-1.spring-only,
+.summer .bg-1.summer-only,
+.autumn .bg-1.autumn-only,
+.winter .bg-1.winter-only {
+  opacity: 1;
+}
+
+@keyframes blurCycle {
+  0%, 100% { filter: blur(0px); }
+  50% { filter: blur(4px); }
+}
+
+/* Star field layer */
+#star-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.star {
+  position: absolute;
+  background-color: #fff;
+  border-radius: 50%;
+  animation: starBlink 4s infinite ease-in-out;
+  will-change: opacity;
+}
+
+@keyframes starBlink {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.85; }
+}
+
+/* --- Glowing Moon --- */
+.moon-blur-wrapper {
+  position: absolute;
+  width: 100%;
+  height: 33vh;
+  top: -5%;
+  will-change: transform;
+}
+
+.moon-bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-position: center top;
+  background-repeat: no-repeat;
+  animation: lightPulsemoon 8s infinite ease-in-out;
+  will-change: filter, opacity;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+}
+
+/* Seasonal moons */
+.moon-bg.default-moon { background-image: url('https://alfoart.com/images/derionzini-images/moon.webp'); }
+.moon-bg.autumn-moon { background-image: url('https://alfoart.com/images/derionzini-images/moon-summer.webp'); }
+
+.spring .default-moon,
+.summer .default-moon,
+.winter .default-moon,
+.autumn .autumn-moon {
+  opacity: 1;
+}
+
+@keyframes lightPulsemoon {
+  0%, 100% { filter: brightness(0.75) contrast(100%); }
+  50% { filter: brightness(1.05) contrast(108%); }
+}
+
+/* --- Clouds (Floating & Blur) --- */
+.cloud {
+  position: absolute;
+  background-size: contain;
+  background-repeat: no-repeat;
+  will-change: transform, opacity;
+  transform: translate3d(0, 0, 0);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.5s ease-in-out;
+}
+
+/* Spring Clouds display */
+.spring .cloud-left-top.spring-only,
+.spring .cloud-1.spring-only,
+.spring .cloud-4.spring-only,
+.spring .cloud-right-top.spring-only {
+  opacity: 0.28;
+}
+
+.cloud-left-top {
+  width: 35%;
+  height: 30%;
+  left: -8%;
+  top: -8%;
+  background-image: url('https://alfoart.com/images/derionzini-images/cloud-2.webp');
+  animation: blurCycle 14s infinite ease-in-out, driftSlow 190s linear infinite alternate;
+}
+
+.cloud-1 {
+  width: 21%;
+  height: 15%;
+  left: 20%;
+  top: 13%;
+  background-image: url('https://alfoart.com/images/derionzini-images/cloud-1.webp');
+  animation: driftMedium 220s linear infinite alternate;
+}
+
+.cloud-4 {
+  width: 20%;
+  height: 15%;
+  left: 45%;
+  top: 6%;
+  background-image: url('https://alfoart.com/images/derionzini-images/cloud-4.webp');
+  animation: driftSlow 170s linear infinite alternate;
+}
+
+.cloud-right-top {
+  width: 30%;
+  height: 25%;
+  right: 3%;
+  top: -8%;
+  background-image: url('https://alfoart.com/images/derionzini-images/cloud-3.webp');
+  animation: driftMedium 150s linear infinite alternate;
+}
+
+/* Summer Cloud display */
+.summer .cloud-summer.summer-only { opacity: 0.8; }
+.cloud-summer {
+  height: 80%; width: 80%; left: 10%; top: -40%; 
+  background-image: url('https://alfoart.com/images/derionzini-images/cloud-summer.webp'); 
+  animation: cloud-float 12s infinite alternate ease-in-out;
+}
+
+/* Autumn Cloud display */
+.autumn .cloud-fall.autumn-only { opacity: 0.8; }
+.cloud-fall {
+  height: 60%; width: 60%; left: 3%; top: -10%; 
+  background-image: url('https://alfoart.com/images/derionzini-images/cloud-fall.webp'); 
+  animation: cloud-float 10s infinite alternate ease-in-out;
+}
+
+/* Winter Cloud display */
+.winter .cloud-winter.winter-only { opacity: 0.8; }
+.cloud-winter {
+  height: 90%; width: 90%; left: -5%; top: -30%; 
+  background-image: url('https://alfoart.com/images/derionzini-images/cloud-winter.webp'); 
+  animation: cloud-float 11s infinite alternate ease-in-out;
+}
+
+@keyframes driftSlow {
+  0% { transform: translate3d(-4%, 0, 0); }
+  100% { transform: translate3d(4%, 0, 0); }
+}
+
+@keyframes driftMedium {
+  0% { transform: translate3d(3%, 0, 0); }
+  100% { transform: translate3d(-3%, 0, 0); }
+}
+
+@keyframes cloud-float {
+  0% { transform: translate3d(0, -12px, 0); }
+  100% { transform: translate3d(0, 12px, 0); }
+}
+
+/* --- Distant Ridges --- */
+.bg-2-container {
+  position: absolute;
+  width: 110vw;
+  height: 65vh;
+  left: -6vw;
+  bottom: -3vh;
+  z-index: 10;
+  will-change: transform;
+}
+
+.bg-2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center bottom;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+}
+
+.bg-2.spring-only { background-image: url('https://alfoart.com/images/derionzini-images/background-2.webp'); }
+.bg-2.summer-only { background-image: url('https://alfoart.com/images/derionzini-images/background-2-summer.webp'); }
+.bg-2.autumn-only { background-image: url('https://alfoart.com/images/derionzini-images/background-2-fall-new.webp'); }
+.bg-2.winter-only { background-image: url('https://alfoart.com/images/derionzini-images/background-2-winter.webp'); }
+
+.spring .bg-2.spring-only,
+.summer .bg-2.summer-only,
+.autumn .bg-2.autumn-only,
+.winter .bg-2.winter-only {
+  opacity: 1;
+}
+
+/* --- Silhouette Mansion & Dancing Dancers --- */
+.building-group {
+  width: 128vw;
+  aspect-ratio: 27 / 10;
+  left: -14vw;
+  bottom: -10vh;
+  z-index: 30;
+}
+
+.interior {
+  position: absolute;
+  width: 33.07%;
+  height: 16.39%;
+  left: 50%;
+  bottom: 35%;
+  transform: translateX(-50%);
+  background-image: url('https://alfoart.com/images/derionzini-images/building-interior.webp');
+  background-size: 100% 100%;
+  z-index: 31;
+  animation: lightPulse 5s infinite ease-in-out;
+  will-change: filter;
+}
+
+@keyframes lightPulse {
+  0%, 100% { filter: brightness(0.9) contrast(100%); }
+  50% { filter: brightness(1.7) contrast(105%); }
+}
+
+.dancers {
+  position: absolute;
+  width: 20.66%;
+  height: 9.7%;
+  left: 50%;
+  bottom: 34.8%;
+  background-image: url('https://alfoart.com/images/derionzini-images/dancing-people.webp');
+  background-size: 100% 100%;
+  z-index: 32;
+  animation: danceWave 10s infinite cubic-bezier(0.45, 0.05, 0.55, 0.95);
+  will-change: transform;
+}
+
+@keyframes danceWave {
+  0%, 100% { transform: translateX(-50%) translate(0, 0); }
+  6% { transform: translateX(-50%) translate(-4%, -8px); }
+  12% { transform: translateX(-50%) translate(-4%, 0); }
+  18% { transform: translateX(-50%) translate(-8%, -8px); }
+  24% { transform: translateX(-50%) translate(-8%, 0); }
+  30% { transform: translateX(-50%) translate(-12%, -8px); }
+  36% { transform: translateX(-50%) translate(-12%, 0); }
+  50% { transform: translateX(-50%) translate(0, 0); }
+  56% { transform: translateX(-50%) translate(4%, -8px); }
+  62% { transform: translateX(-50%) translate(4%, 0); }
+  68% { transform: translateX(-50%) translate(8%, -8px); }
+  74% { transform: translateX(-50%) translate(8%, 0); }
+  80% { transform: translateX(-50%) translate(12%, -8px); }
+  86% { transform: translateX(-50%) translate(12%, 0); }
+}
+
+.front-shell {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-size: 100% 100%;
+  z-index: 33;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+}
+
+.front-shell.spring-only { background-image: url('https://alfoart.com/images/derionzini-images/front-scene.webp'); }
+.front-shell.summer-only { background-image: url('https://alfoart.com/images/derionzini-images/front-scene-summer.webp'); }
+.front-shell.autumn-only { background-image: url('https://alfoart.com/images/derionzini-images/front-scene-fall.webp'); }
+.front-shell.winter-only { background-image: url('https://alfoart.com/images/derionzini-images/front-scene-winter.webp'); }
+
+.spring .front-shell.spring-only,
+.summer .front-shell.summer-only,
+.autumn .front-shell.autumn-only,
+.winter .front-shell.winter-only {
+  opacity: 1;
+}
+
+/* --- Layer 9: Title Group --- */
+.title-group {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 40;
+}
+
+.text-layer {
+  pointer-events: auto; /* Active pointer events for links/text */
+}
+
+.title-content {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 650px;
+  width: 100%;
+  padding: 0 2rem;
+}
+
+/* Circular Text Navigation */
+.nav-arc-wrapper {
+  position: relative;
+  width: 16vw;
+  min-width: 160px;
+  height: 8vw;
+  min-height: 80px;
+  margin: 0 auto 2vh auto;
+  overflow: hidden;
+}
+
+.nav-arc-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
+}
+
+.nav-arc-circle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 200%;
+  will-change: transform;
+  transform-origin: center;
+  animation: rotateArcClockwise 40s linear infinite;
+  pointer-events: none;
+}
+
+.arc-links a {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.arc-links text {
+  font-family: var(--font-body);
+  font-size: 11px;
+  fill: var(--accent-color);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 500;
+  opacity: 0.75;
+  transition: opacity 0.3s;
+}
+
+.arc-links a:hover text {
+  opacity: 1;
+  fill: #ffffff;
+}
+
+.arc-links a.active-season text {
+  opacity: 1;
+  fill: #ffffff;
+  font-weight: 700;
+}
+
+.nav-arc-wrapper:hover .nav-arc-circle {
+  animation-play-state: paused;
+}
+
+.nav-arc-logo {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  top: 48%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-image: url('https://alfoart.com/derionzini-en/wp-content/uploads/2026/03/sd-logo-512-golden.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.85;
+}
+
+@keyframes rotateArcClockwise {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Typography styles */
+.title-group h1 {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-size: clamp(2rem, 3.8vw, 4.5rem);
+  letter-spacing: 1.5px;
+  margin-bottom: 0.4rem;
+  color: #f6ebd6; /* Off-white cream */
+  text-shadow: 0 4px 15px rgba(0,0,0,0.6);
+  line-height: 1.1;
+  text-transform: capitalize;
+}
+
+.title-group h3 {
+  font-family: var(--font-heading);
+  font-weight: 300;
+  font-size: clamp(0.8rem, 1.2vw, 1.1rem);
+  letter-spacing: 4px;
+  color: var(--accent-color);
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+  font-style: italic;
+}
+
+.divider {
+  width: 40px;
+  height: 1px;
+  background-color: var(--accent-color);
+  opacity: 0.35;
+  margin-bottom: 2rem;
+}
+
+.poem-text {
+  font-family: var(--font-heading);
+  font-size: clamp(1rem, 1.4vw, 1.35rem);
+  line-height: 1.8;
+  color: #b2b2b2;
+  font-style: italic;
+  font-weight: 300;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+}
+
+/* --- Atmospheric particles: sakura, green leaves, autumn leaves, snow --- */
+#particle-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 45;
+  overflow: hidden;
+}
+
+.sakura-petal {
+  position: absolute;
+  background-image: url('https://alfoart.com/images/derionzini-images/petal.webp');
+  background-size: contain;
+  background-repeat: no-repeat;
+  top: 0vh;
+  left: 105vw;
+  will-change: transform, top, left;
+}
+
+.green-leaf {
+  position: absolute;
+  background-image: url('https://alfoart.com/images/derionzini-images/leaf2.webp');
+  background-size: contain;
+  background-repeat: no-repeat;
+  top: 0vh;
+  left: 105vw;
+  will-change: transform, top, left;
+}
+
+.fall-leaf {
+  position: absolute;
+  background-image: url('https://alfoart.com/images/derionzini-images/leaf.webp');
+  background-size: contain;
+  background-repeat: no-repeat;
+  top: 0vh;
+  left: 105vw;
+  will-change: transform, top, left;
+}
+
+.css-snowflake {
+  position: absolute;
+  background-color: #ffffff;
+  border-radius: 50%;
+  top: -5vh;
+  will-change: transform, top, left;
+}
+
+@keyframes snow-fall {
+  0% { top: -5vh; transform: translate3d(0, 0, 0); }
+  100% { top: 105vh; transform: translate3d(var(--sway-distance), 0, 0); }
+}
+
+/* --- Foreground Fog Group (Layer 10) --- */
+.fog-group {
+  width: 140vw;
+  left: -20vw;
+  bottom: 1vh;
+  height: 80vh;
+  z-index: 50;
+  pointer-events: none;
+}
+
+.fog-layer {
+  position: absolute;
+  width: 200%;
+  height: 100%;
+  background-image: url('https://alfoart.com/images/derionzini-images/fog-5.webp');
+  background-repeat: repeat-x;
+  background-size: 50% 100%;
+  opacity: 0.38;
+  will-change: transform, opacity;
+  transform: translate3d(0, 0, 0);
+  animation: fogBreath 8s infinite ease-in-out;
+}
+
+.fog-1 {
+  top: 0;
+  left: 0;
+  animation: fogMoveLeft 60s linear infinite;
+}
+
+.fog-2 {
+  top: 35%;
+  left: 0;
+  opacity: 0.28;
+  animation: fogMoveRight 90s linear infinite;
+}
+
+@keyframes fogMoveLeft {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+
+@keyframes fogMoveRight {
+  0% { transform: translate3d(-50%, 0, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+
+@keyframes fogBreath {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.38; }
+}
+
+/* --- Footer --- */
+.footer-copyright {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 3rem 4rem;
+  pointer-events: none;
+}
+
+.cinematic-footer-signature {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+/* Share Button Overlay styling (optional wrapper) */
+.arc-links a, .arc-links text, .nav-arc-circle, .nav-arc-wrapper svg {
+  -webkit-tap-highlight-color: transparent !important;
+  outline: none !important;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 1024px) {
+  .bg-2-container { width: 310vw; left: -100vw; }
+  .cloud-1 { width: 60%; left: -18%; top: 45vw; }
+  .cloud-4 { width: 65%; left: 45%; top: 18vw;}
+  .navbar { padding: 2rem 2.5rem; }
+  .menu { display: none; }
+  .footer-copyright { padding: 2rem 2.5rem; }
+  .cinematic-footer-signature {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+    text-align: center;
+  }
+}

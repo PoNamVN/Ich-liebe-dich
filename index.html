@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Strahlborn and De Rionzini | An Archival Saga</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body class="home parallax-spring spring"> <!-- Default is Spring -->
+    <!-- Preloader -->
+    <div id="loader">
+      <div class="loader-content">
+        <div class="loader-emblem">❦</div>
+        <div class="loader-bar-wrap">
+          <div class="loader-bar"></div>
+        </div>
+        <div class="loader-text">LOADING ARCHIVAL SAGA...</div>
+      </div>
+    </div>
+
+    <!-- Header / Navbar -->
+    <nav class="navbar">
+      <a href="#" class="logo">A.SAGA</a>
+      <div class="menu">
+        <a href="#" class="nav-link">Saga</a>
+        <a href="#" class="nav-link">Chronicles</a>
+        <a href="#" class="nav-link">Index</a>
+      </div>
+    </nav>
+
+    <!-- Parallax 3D Viewport -->
+    <main id="parallax-viewport">
+      
+      <!-- Layer 1: Background Sky & Stars (data-depth="0.010") -->
+      <div class="layer full-sky" style="z-index: 1;" data-depth="0.010">
+        <div class="bg-1 spring-only"></div>
+        <div class="bg-1 summer-only"></div>
+        <div class="bg-1 autumn-only"></div>
+        <div class="bg-1 winter-only"></div>
+        <div id="star-container"></div>
+      </div>
+
+      <!-- Layer 2: Glowing Moon (data-depth="0.012") -->
+      <div class="layer full-sky" style="z-index: 2;" data-depth="0.012">
+        <div class="moon-blur-wrapper">
+          <div class="moon-bg default-moon"></div>
+          <div class="moon-bg autumn-moon"></div>
+        </div>
+      </div>
+
+      <!-- Layer 3: Clouds Layer 1 (data-depth="0.013") -->
+      <div class="layer full-sky" style="z-index: 3;" data-depth="0.013">
+        <div class="cloud cloud-left-top spring-only"></div>
+        <div class="cloud cloud-summer summer-only"></div>
+        <div class="cloud cloud-fall autumn-only"></div>
+        <div class="cloud cloud-winter winter-only"></div>
+      </div>
+
+      <!-- Layer 4: Cloud 1 (data-depth="0.014") -->
+      <div class="layer full-sky" style="z-index: 4;" data-depth="0.014">
+        <div class="cloud cloud-1 spring-only"></div>
+      </div>
+
+      <!-- Layer 5: Cloud 4 (data-depth="0.015") -->
+      <div class="layer full-sky" style="z-index: 5;" data-depth="0.015">
+        <div class="cloud cloud-4 spring-only"></div>
+      </div>
+
+      <!-- Layer 6: Cloud Right Top (data-depth="0.013") -->
+      <div class="layer full-sky" style="z-index: 6;" data-depth="0.013">
+        <div class="cloud cloud-right-top spring-only"></div>
+      </div>
+
+      <!-- Layer 7: Distant Mountains (data-depth="0.025") -->
+      <div class="layer bg-2-container" style="z-index: 10;" data-depth="0.025">
+        <div class="bg-2 spring-only"></div>
+        <div class="bg-2 summer-only"></div>
+        <div class="bg-2 autumn-only"></div>
+        <div class="bg-2 winter-only"></div>
+      </div>
+      
+      <!-- Layer 8: Mansion interior & dancers & front shell (data-depth="0.035") -->
+      <div class="building-group" style="z-index: 30;" data-depth="0.035">
+        <div class="interior"></div>
+        <div class="dancers"></div>
+        <div class="front-shell spring-only"></div>
+        <div class="front-shell summer-only"></div>
+        <div class="front-shell autumn-only"></div>
+        <div class="front-shell winter-only"></div>
+      </div>
+
+      <!-- Layer 9: Title & Circle Arc Nav Group (data-depth="0.080") -->
+      <div class="title-group text-layer" style="z-index: 40;" data-depth="0.080">
+        <div class="title-content">
+          
+          <!-- Circular text navigation around logo -->
+          <div class="nav-arc-wrapper">
+            <div class="nav-arc-mask">
+              <svg class="nav-arc-circle" viewBox="0 0 200 200">
+                <defs>
+                  <path id="textCircle" d="M 10, 100 A 90, 90 0 1, 1 190, 100 A 90, 90 0 1, 1 10, 100" />
+                </defs>
+                <g class="arc-links">
+                  <a class="season-link active-season" href="#" data-season="spring"><text><textPath href="#textCircle" startOffset="6.25%" text-anchor="middle">Spring</textPath></text></a>
+                  <a class="season-link" href="#" data-season="summer"><text><textPath href="#textCircle" startOffset="18.75%" text-anchor="middle">Summer</textPath></text></a>
+                  <a class="season-link" href="#" data-season="autumn"><text><textPath href="#textCircle" startOffset="31.25%" text-anchor="middle">Autumn</textPath></text></a>
+                  <a class="season-link" href="#" data-season="winter"><text><textPath href="#textCircle" startOffset="43.75%" text-anchor="middle">Winter</textPath></text></a>
+                  
+                  <a class="season-link" href="#" data-season="spring"><text><textPath href="#textCircle" startOffset="56.25%" text-anchor="middle">Spring</textPath></text></a>
+                  <a class="season-link" href="#" data-season="summer"><text><textPath href="#textCircle" startOffset="68.75%" text-anchor="middle">Summer</textPath></text></a>
+                  <a class="season-link" href="#" data-season="autumn"><text><textPath href="#textCircle" startOffset="81.25%" text-anchor="middle">Autumn</textPath></text></a>
+                  <a class="season-link" href="#" data-season="winter"><text><textPath href="#textCircle" startOffset="93.75%" text-anchor="middle">Winter</textPath></text></a>
+                </g>
+              </svg>
+            </div>
+            <div class="nav-arc-logo"></div>
+          </div>
+
+          <!-- Main Title -->
+          <h1 class="reveal-text">Strahlborn and De Rionzini</h1>
+          <h3 class="reveal-text">An Archival Saga</h3>
+          
+          <!-- Decorative Line -->
+          <div class="divider"></div>
+          
+          <!-- Poem Text -->
+          <p class="poem-text reveal-text">
+            Let us no longer trifle on<br />
+            With idle gossip, empty talk.<br />
+            I’ve dreamed of this—confess I must—<br />
+            To paint the town ball, just once.
+          </p>
+        </div>
+      </div>
+
+      <!-- Unified Particle Container (z-index: 45, pointer-events: none) -->
+      <div id="particle-container"></div>
+
+      <!-- Layer 10: Foreground Fog Group (data-depth="0.090") -->
+      <div class="fog-group" style="z-index: 50;" data-depth="0.090">
+        <div class="fog-layer fog-1"></div>
+        <div class="fog-layer fog-2"></div>
+      </div>
+
+      <!-- Footer Overlay (z-index: 60) -->
+      <footer class="footer-copyright" style="z-index: 60;">
+        <div class="cinematic-footer-signature">
+          <span class="signature-author">&copy; Designed & Researched by Alexandra Fomicheva</span>
+          <span class="signature-cta">Contact me to build a proper digital estate for your own history.</span>
+        </div>
+      </footer>
+    </main>
+
+    <!-- Scripts -->
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
