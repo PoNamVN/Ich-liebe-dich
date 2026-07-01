@@ -886,10 +886,10 @@ html, body {
 .space-moon-surface-wrapper {
   position: absolute;
   width: 150vw;
-  height: 55vh;
+  height: 45vh;
   left: 50%;
   transform: translateX(-50%);
-  bottom: -10vh;
+  bottom: -12vh;
   top: auto;
   z-index: 20;
 }
