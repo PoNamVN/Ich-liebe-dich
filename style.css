@@ -236,9 +236,11 @@ html, body {
 /* --- Glowing Moon --- */
 .moon-blur-wrapper {
   position: absolute;
-  width: 100%;
-  height: 33vh;
-  top: -5%;
+  width: 180px;
+  height: 180px;
+  top: 4vh;
+  left: 50%;
+  margin-left: -90px;
   will-change: transform;
   pointer-events: none;
 }
@@ -248,14 +250,25 @@ html, body {
   width: 100%;
   height: 100%;
   background-size: contain;
-  background-position: center top;
+  background-position: center;
   background-repeat: no-repeat;
   animation: lightPulsemoon 8s infinite ease-in-out;
-  will-change: filter, opacity;
+  will-change: filter, opacity, transform;
   opacity: 0;
-  transition: opacity 1.5s ease-in-out;
+  transition: opacity 1.5s ease-in-out, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
   pointer-events: auto;
   cursor: pointer;
+  border-radius: 50%;
+}
+
+.moon-bg:hover {
+  transform: scale(1.1);
+  animation: lightPulsemoon 8s infinite ease-in-out, moonSpin 12s linear infinite;
+}
+
+@keyframes moonSpin {
+  0% { transform: scale(1.1) rotate(0deg); }
+  100% { transform: scale(1.1) rotate(360deg); }
 }
 
 /* Seasonal moons */
@@ -781,10 +794,10 @@ html, body {
 
 .space-layer {
   position: absolute;
-  width: 112vw;
-  height: 112vh;
-  left: -6vw;
-  top: -6vh;
+  width: 116vw;
+  height: 116vh;
+  left: -8vw;
+  top: -8vh;
   will-change: transform;
   pointer-events: none;
 }
@@ -860,10 +873,10 @@ html, body {
 
 .space-moon-surface-wrapper {
   position: absolute;
-  width: 120vw;
-  height: 38vh;
-  left: -10vw;
-  bottom: -5vh;
+  width: 125vw;
+  height: 48vh;
+  left: -12vw;
+  bottom: -10vh;
   top: auto;
   z-index: 20;
 }
@@ -872,9 +885,25 @@ html, body {
   width: 100%;
   height: 100%;
   background-image: url('/moon-surface.png');
-  background-size: 100% 100%;
+  background-size: cover;
   background-position: center top;
   background-repeat: no-repeat;
+}
+
+.space-orbiting-moon {
+  position: absolute;
+  width: 3.5vw;
+  height: 3.5vw;
+  min-width: 35px;
+  min-height: 35px;
+  background-image: url('https://alfoart.com/images/derionzini-images/moon.webp');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 50%;
+  box-shadow: inset -6px -6px 12px rgba(0,0,0,0.85),
+              0 0 15px rgba(255, 255, 255, 0.2);
+  will-change: transform;
 }
 
 .space-ui {
