@@ -356,10 +356,14 @@ document.addEventListener("DOMContentLoaded", () => {
         delay: 0.2
       });
 
-      // 4. Slide up moon surface rocky foreground
+      // 4. Slide up moon surface rocky foreground and floating rocks
       gsap.fromTo('.space-moon-surface-wrapper', 
         { y: 300, opacity: 0 },
         { y: 0, opacity: 1, duration: 1.8, ease: "power3.out", delay: 0.4 }
+      );
+      gsap.fromTo('.space-rocks-foreground', 
+        { y: 400, opacity: 0 },
+        { y: 0, opacity: 1, duration: 2.0, ease: "power3.out", delay: 0.3 }
       );
 
       // 5. Fade in Space UI (Return button & Caption)
@@ -384,7 +388,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ease: "power2.in"
       });
 
-      gsap.to('.space-moon-surface-wrapper', {
+      gsap.to('.space-moon-surface-wrapper, .space-rocks-foreground', {
         y: 300,
         opacity: 0,
         duration: 1.0,
@@ -423,40 +427,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
-
-  // --- 5. Orbiting Moon Animation (3D Orbit) ---
-  const orbitingMoon = document.querySelector('.space-orbiting-moon');
-  let orbitAngle = 0;
-
-  function animateOrbit() {
-    if (isSpaceView && orbitingMoon) {
-      orbitAngle += 0.0035; // slow rotation speed
-      
-      // Dynamic responsiveness based on screen width
-      const rX = window.innerWidth * 0.22; // orbit width (22% of screen width)
-      const rY = window.innerWidth * 0.055; // orbit height (5.5% of screen width)
-      
-      const x = Math.cos(orbitAngle) * rX;
-      const y = Math.sin(orbitAngle) * rY;
-      
-      const sinVal = Math.sin(orbitAngle);
-      // zIndex is 12 (in front of Earth) when sinVal > 0, and 8 (behind Earth) when sinVal < 0
-      const zIndex = sinVal > 0 ? 12 : 8;
-      // Scale is larger in front and smaller behind
-      const scale = 0.85 + sinVal * 0.15;
-      
-      gsap.set(orbitingMoon, {
-        x: x,
-        y: y,
-        scale: scale,
-        zIndex: zIndex
-      });
-    }
-    requestAnimationFrame(animateOrbit);
-  }
-  
-  // Start orbit loop
-  animateOrbit();
 });
 
 
