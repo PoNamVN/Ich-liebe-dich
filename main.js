@@ -356,10 +356,10 @@ document.addEventListener("DOMContentLoaded", () => {
         delay: 0.2
       });
 
-      // 4. Slide up moon surface rocky foreground
+      // 4. Fade in moon surface rocky foreground smoothly
       gsap.fromTo('.space-moon-surface-wrapper', 
-        { y: 80, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1.8, ease: "power3.out", delay: 0.4 }
+        { opacity: 0 },
+        { opacity: 1, duration: 2.0, ease: "power2.inOut", delay: 0.4 }
       );
 
       // 5. Fade in Space UI (Return button & Caption)
@@ -385,10 +385,9 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       gsap.to('.space-moon-surface-wrapper', {
-        y: 80,
         opacity: 0,
-        duration: 1.0,
-        ease: "power3.in"
+        duration: 1.2,
+        ease: "power2.inOut"
       });
 
       gsap.to(viewScale, {
