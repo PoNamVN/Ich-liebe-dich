@@ -962,8 +962,12 @@ html, body {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 90%;
-  height: 90%;
+  width: 50vw;
+  height: 50vw;
+  min-width: 300px;
+  min-height: 300px;
+  max-width: 800px;
+  max-height: 800px;
   transform: translate(-50%, -50%);
   pointer-events: none;
   z-index: 15;
@@ -971,7 +975,7 @@ html, body {
 
 .love-text {
   font-family: 'Brush Script MT', 'Dancing Script', cursive;
-  font-size: 80px; /* Made slightly larger */
+  font-size: 100px; /* Scaled up to fit the 400x400 viewBox */
   font-weight: bold;
   fill: transparent;
   stroke: #ff3300; /* Deep lava red */
