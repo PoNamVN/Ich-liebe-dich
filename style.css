@@ -861,7 +861,7 @@ html, body {
   min-width: 290px;
   min-height: 290px;
   border-radius: 50%;
-  background-image: url('/earth-space.png');
+  background-image: url('/earth-space.png?v=6');
   background-size: 105% 105%;
   background-position: center;
   position: relative;
@@ -891,7 +891,7 @@ html, body {
 .space-moon-surface {
   width: 100%;
   height: 100%;
-  background-image: url('/moon-surface.png');
+  background-image: url('/moon-surface.png?v=6');
   background-size: cover;
   background-position: center top;
   background-repeat: no-repeat;
@@ -978,7 +978,7 @@ html, body {
 
 .space-rock {
   position: absolute;
-  background-image: url('/moon-surface.png');
+  background-image: url('/moon-surface.png?v=6');
   background-size: cover;
 }
 
