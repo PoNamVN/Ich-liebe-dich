@@ -278,8 +278,8 @@ html, body {
 }
 
 /* Seasonal moons */
-.moon-bg.default-moon { background-image: url('/moon-isolated.png'); }
-.moon-bg.autumn-moon { background-image: url('/moon-isolated-autumn.png'); }
+.moon-bg.default-moon { background-image: url('/moon-isolated.png?v=3'); }
+.moon-bg.autumn-moon { background-image: url('/moon-isolated-autumn.png?v=3'); }
 
 .spring .default-moon,
 .summer .default-moon,
@@ -902,7 +902,7 @@ html, body {
   height: 3.5vw;
   min-width: 35px;
   min-height: 35px;
-  background-image: url('/moon-isolated.png');
+  background-image: url('/moon-isolated.png?v=3');
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
