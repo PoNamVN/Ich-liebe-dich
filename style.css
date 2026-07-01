@@ -277,8 +277,8 @@ html, body {
 }
 
 /* Seasonal moons */
-.moon-bg.default-moon { background-image: url('https://alfoart.com/images/derionzini-images/moon.webp'); }
-.moon-bg.autumn-moon { background-image: url('https://alfoart.com/images/derionzini-images/moon-summer.webp'); }
+.moon-bg.default-moon { background-image: url('/moon-isolated.png'); }
+.moon-bg.autumn-moon { background-image: url('/moon-isolated-autumn.png'); }
 
 .spring .default-moon,
 .summer .default-moon,
@@ -901,7 +901,7 @@ html, body {
   height: 3.5vw;
   min-width: 35px;
   min-height: 35px;
-  background-image: url('https://alfoart.com/images/derionzini-images/moon.webp');
+  background-image: url('/moon-isolated.png');
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
