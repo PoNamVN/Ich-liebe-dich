@@ -994,10 +994,10 @@ html, body {
 }
 
 .love-text-base {
-  stroke: #ff3300; /* Deep lava red */
-  stroke-width: 3.5px; /* Thick scar */
-  filter: drop-shadow(0 0 5px #ffeb3b) drop-shadow(0 0 15px #ff5500) drop-shadow(0 0 35px #ff0000);
-  mix-blend-mode: screen; /* Burns into the earth background */
+  stroke: #ff9900; /* Bright magma core */
+  stroke-width: 6px; /* Thick scar */
+  filter: drop-shadow(0 0 10px #ff3300) drop-shadow(0 0 30px #ff0000);
+  mix-blend-mode: color-dodge; /* Burns into the earth background */
   stroke-dasharray: 800;
   stroke-dashoffset: 800;
 }
