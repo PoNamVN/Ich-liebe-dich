@@ -311,11 +311,113 @@ document.addEventListener("DOMContentLoaded", () => {
       container.appendChild(snow);
     }
   }
+
+  // --- 4. Space View Transition Logic (Fly-to-space & Return) ---
+  const moons = document.querySelectorAll('.moon-bg');
+  const spaceOverlay = document.getElementById('space-overlay');
+  const btnReturn = document.getElementById('btn-return-manor');
+  const manorElements = document.querySelectorAll('.layer, .building-group, .fog-group, .title-group');
+  
+  let isSpaceView = false;
+
+  moons.forEach(moon => {
+    moon.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (isSpaceView) return;
+      isSpaceView = true;
+
+      // 1. Zoom out/fade out manor elements
+      gsap.to(manorElements, {
+        scale: 2.5,
+        opacity: 0,
+        duration: 1.8,
+        ease: "power4.inOut",
+        pointerEvents: 'none'
+      });
+
+      // 2. Show space overlay
+      spaceOverlay.style.display = 'block';
+      gsap.fromTo(spaceOverlay, 
+        { opacity: 0 },
+        { opacity: 1, duration: 1.2, ease: "power2.inOut" }
+      );
+
+      // 3. Zoom in Earth from tiny to normal
+      gsap.fromTo('.space-earth-wrapper', 
+        { scale: 0.15, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 2.0, ease: "power3.out", delay: 0.2 }
+      );
+
+      // 4. Slide up moon surface rocky foreground
+      gsap.fromTo('.space-moon-surface-wrapper', 
+        { y: 300, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1.8, ease: "power3.out", delay: 0.4 }
+      );
+
+      // 5. Fade in Space UI (Return button & Caption)
+      gsap.fromTo('.space-ui', 
+        { opacity: 0, y: -20 },
+        { opacity: 1, y: 0, duration: 1.2, ease: "power2.out", delay: 1.1 }
+      );
+    });
+  });
+
+  if (btnReturn) {
+    btnReturn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!isSpaceView) return;
+      isSpaceView = false;
+
+      // 1. Fade out Space UI & surface
+      gsap.to('.space-ui', {
+        opacity: 0,
+        y: -20,
+        duration: 0.6,
+        ease: "power2.in"
+      });
+
+      gsap.to('.space-moon-surface-wrapper', {
+        y: 300,
+        opacity: 0,
+        duration: 1.0,
+        ease: "power3.in"
+      });
+
+      gsap.to('.space-earth-wrapper', {
+        scale: 0.15,
+        opacity: 0,
+        duration: 1.2,
+        ease: "power3.in"
+      });
+
+      // 2. Fade out Space Overlay
+      gsap.to(spaceOverlay, {
+        opacity: 0,
+        duration: 1.2,
+        ease: "power2.inOut",
+        onComplete: () => {
+          spaceOverlay.style.display = 'none';
+        }
+      });
+
+      // 3. Fade in/Restore manor elements to normal
+      gsap.fromTo(manorElements, 
+        { scale: 2.5, opacity: 0 },
+        { 
+          scale: 1, 
+          duration: 1.6, 
+          ease: "power4.out", 
+          clearProps: "scale,opacity,pointerEvents",
+          delay: 0.2
+        }
+      );
+    });
+  }
 });
 
 
-// --- 4. Parallax Core Engine (Hardware Accelerated Lerp & Gyroscope) ---
-const layers = document.querySelectorAll('.layer, .building-group, .fog-group, .title-group');
+// --- 5. Parallax Core Engine (Hardware Accelerated Lerp & Gyroscope) ---
+const layers = document.querySelectorAll('.layer, .building-group, .fog-group, .title-group, .space-layer');
 
 let targetX = 0;
 let targetY = 0;
