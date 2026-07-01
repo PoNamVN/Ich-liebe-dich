@@ -358,7 +358,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // 4. Slide up moon surface rocky foreground
       gsap.fromTo('.space-moon-surface-wrapper', 
-        { y: 300, opacity: 0 },
+        { y: 80, opacity: 0 },
         { y: 0, opacity: 1, duration: 1.8, ease: "power3.out", delay: 0.4 }
       );
 
@@ -385,7 +385,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       gsap.to('.space-moon-surface-wrapper', {
-        y: 300,
+        y: 80,
         opacity: 0,
         duration: 1.0,
         ease: "power3.in"
