@@ -836,6 +836,11 @@ html, body {
 }
 
 .space-earth-wrapper {
+  position: absolute;
+  top: -5vh; /* Perfect vertical balance */
+  left: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
