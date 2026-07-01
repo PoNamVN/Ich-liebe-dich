@@ -261,7 +261,7 @@ html, body {
   will-change: filter, opacity, transform;
   opacity: 0;
   transition: opacity 1.5s ease-in-out, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-  pointer-events: auto;
+  pointer-events: none;
   cursor: pointer;
   border-radius: 50%;
   mix-blend-mode: screen;
@@ -278,14 +278,15 @@ html, body {
 }
 
 /* Seasonal moons */
-.moon-bg.default-moon { background-image: url('/moon-isolated.png?v=3'); }
-.moon-bg.autumn-moon { background-image: url('/moon-isolated-autumn.png?v=3'); }
+.moon-bg.default-moon { background-image: url('/moon-isolated.png?v=5'); }
+.moon-bg.autumn-moon { background-image: url('/moon-isolated-autumn.png?v=5'); }
 
 .spring .default-moon,
 .summer .default-moon,
 .winter .default-moon,
 .autumn .autumn-moon {
   opacity: 1;
+  pointer-events: auto;
 }
 
 @keyframes lightPulsemoon {
@@ -902,7 +903,7 @@ html, body {
   height: 3.5vw;
   min-width: 35px;
   min-height: 35px;
-  background-image: url('/moon-isolated.png?v=3');
+  background-image: url('/moon-isolated.png?v=5');
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
