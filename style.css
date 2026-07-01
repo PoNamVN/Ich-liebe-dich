@@ -985,18 +985,43 @@ html, body {
   z-index: 15;
 }
 
-.love-text {
+.love-text-base, .love-text-head {
   font-family: 'Brush Script MT', 'Dancing Script', cursive;
-  font-size: 100px; /* Scaled up to fit the 400x400 viewBox */
+  font-size: 100px;
   font-weight: bold;
   fill: transparent;
+  opacity: 0;
+}
+
+.love-text-base {
   stroke: #ff3300; /* Deep lava red */
   stroke-width: 3.5px; /* Thick scar */
   filter: drop-shadow(0 0 5px #ffeb3b) drop-shadow(0 0 15px #ff5500) drop-shadow(0 0 35px #ff0000);
   mix-blend-mode: screen; /* Burns into the earth background */
   stroke-dasharray: 800;
   stroke-dashoffset: 800;
-  opacity: 0;
+}
+
+.love-text-head {
+  stroke: #ffffff; /* Blinding white plasma */
+  stroke-width: 6px;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 10px #ffffff) drop-shadow(0 0 30px #44aaff);
+  stroke-dasharray: 1 800; /* Extremely short 1px dot trailing an 800px gap */
+  stroke-dashoffset: 800;
+}
+
+/* --- Earth Energy Shake --- */
+@keyframes energyShake {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  25% { transform: translate(calc(-50% + 3px), calc(-50% - 3px)) rotate(0.5deg); }
+  50% { transform: translate(calc(-50% - 3px), calc(-50% + 3px)) rotate(-0.5deg); }
+  75% { transform: translate(calc(-50% - 3px), calc(-50% - 3px)) rotate(0.5deg); }
+  100% { transform: translate(calc(-50% + 3px), calc(-50% + 3px)) rotate(-0.5deg); }
+}
+
+.earth-shaking {
+  animation: energyShake 0.1s linear infinite !important;
 }
 
 /* --- Magic Spark --- */

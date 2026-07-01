@@ -500,12 +500,25 @@ document.addEventListener("DOMContentLoaded", () => {
             });
           }
 
-          // 6. Draw "I ❤ U" text
-          gsap.to(loveText, { opacity: 1, duration: 0.2 });
-          gsap.to(loveText, {
+          // 6. Plasma Cutter Effect
+          const loveTextBase = document.querySelector('.love-text-base');
+          const loveTextHead = document.querySelector('.love-text-head');
+          
+          gsap.to([loveTextBase, loveTextHead], { opacity: 1, duration: 0.1 });
+          
+          // Apply violent screen shake to Earth
+          if (spaceEarth) spaceEarth.classList.add('earth-shaking');
+
+          gsap.to([loveTextBase, loveTextHead], {
             strokeDashoffset: 0,
             duration: 4,
-            ease: "power2.inOut"
+            ease: "power2.inOut",
+            onComplete: () => {
+              // Fade out the bright plasma head when finished
+              gsap.to(loveTextHead, { opacity: 0, duration: 0.5 });
+              // Stop the shaking
+              if (spaceEarth) spaceEarth.classList.remove('earth-shaking');
+            }
           });
         }
       });
