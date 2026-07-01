@@ -457,15 +457,44 @@ document.addEventListener("DOMContentLoaded", () => {
         ease: "power2.in",
         delay: 0.2,
         onComplete: () => {
-          // Spark explosion
-          gsap.to(spark, {
-            scale: 6,
+          spark.remove();
+          const spaceOverlay = document.getElementById('space-overlay');
+
+          // Flash effect
+          const flash = document.createElement('div');
+          flash.className = 'explosion-flash';
+          spaceOverlay.appendChild(flash);
+          gsap.set(flash, { x: endX - 75, y: endY - 75 });
+          gsap.to(flash, {
+            scale: 3,
             opacity: 0,
-            duration: 0.3,
-            onComplete: () => spark.remove()
+            duration: 0.5,
+            ease: "power2.out",
+            onComplete: () => flash.remove()
           });
 
-          // 6. Draw "I love u" text
+          // Particle burst
+          for (let i = 0; i < 16; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'explosion-particle';
+            spaceOverlay.appendChild(particle);
+            
+            const angle = (i / 16) * Math.PI * 2;
+            const distance = 80 + Math.random() * 60;
+            
+            gsap.set(particle, { x: endX - 3, y: endY - 3 });
+            gsap.to(particle, {
+              x: endX - 3 + Math.cos(angle) * distance,
+              y: endY - 3 + Math.sin(angle) * distance,
+              scale: 0,
+              opacity: 0,
+              duration: 0.6 + Math.random() * 0.4,
+              ease: "power3.out",
+              onComplete: () => particle.remove()
+            });
+          }
+
+          // 6. Draw "I ❤ U" text
           gsap.to(loveText, { opacity: 1, duration: 0.2 });
           gsap.to(loveText, {
             strokeDashoffset: 0,
