@@ -264,6 +264,7 @@ html, body {
   pointer-events: auto;
   cursor: pointer;
   border-radius: 50%;
+  mix-blend-mode: screen;
 }
 
 .moon-bg:hover {
@@ -909,6 +910,7 @@ html, body {
   box-shadow: inset -6px -6px 12px rgba(0,0,0,0.85),
               0 0 15px rgba(255, 255, 255, 0.2);
   will-change: transform;
+  mix-blend-mode: screen;
 }
 
 .space-ui {
