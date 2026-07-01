@@ -417,9 +417,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- Magic Space Interactions ---
   const magicSun = document.getElementById('magic-sun');
-  const loveText = document.querySelector('.love-text');
+  const loveTextBase = document.querySelector('.love-text-base');
+  const loveTextHead = document.querySelector('.love-text-head');
 
-  if (magicSun && loveText) {
+  if (magicSun && loveTextBase && loveTextHead) {
     magicSun.addEventListener('click', (e) => {
       // Prevent multiple clicks
       if (magicSun.classList.contains('spark-fired')) return;
