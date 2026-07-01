@@ -333,13 +333,10 @@ document.addEventListener("DOMContentLoaded", () => {
         ease: "power4.inOut",
         pointerEvents: 'none'
       });
-      gsap.to({ val: 1 }, {
-        val: 2.5,
+      gsap.to(viewScale, {
+        manor: 2.5,
         duration: 1.8,
-        ease: "power4.inOut",
-        onUpdate: function() {
-          manorScale = this.targets()[0].val;
-        }
+        ease: "power4.inOut"
       });
 
       // 2. Show space overlay
@@ -350,14 +347,11 @@ document.addEventListener("DOMContentLoaded", () => {
       );
 
       // 3. Zoom in Earth from tiny to normal
-      gsap.to({ val: 0.15 }, {
-        val: 1,
+      gsap.to(viewScale, {
+        space: 1,
         duration: 2.0,
         ease: "power3.out",
-        delay: 0.2,
-        onUpdate: function() {
-          spaceScale = this.targets()[0].val;
-        }
+        delay: 0.2
       });
 
       // 4. Slide up moon surface rocky foreground
@@ -395,13 +389,10 @@ document.addEventListener("DOMContentLoaded", () => {
         ease: "power3.in"
       });
 
-      gsap.to({ val: spaceScale }, {
-        val: 0.15,
+      gsap.to(viewScale, {
+        space: 0.15,
         duration: 1.2,
-        ease: "power3.in",
-        onUpdate: function() {
-          spaceScale = this.targets()[0].val;
-        }
+        ease: "power3.in"
       });
 
       // 2. Fade out Space Overlay
@@ -422,14 +413,11 @@ document.addEventListener("DOMContentLoaded", () => {
         clearProps: "opacity,pointerEvents",
         delay: 0.2
       });
-      gsap.to({ val: manorScale }, {
-        val: 1,
+      gsap.to(viewScale, {
+        manor: 1,
         duration: 1.6,
         ease: "power4.out",
-        delay: 0.2,
-        onUpdate: function() {
-          manorScale = this.targets()[0].val;
-        }
+        delay: 0.2
       });
     });
   }
@@ -471,8 +459,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 // --- 5. Parallax Core Engine (Hardware Accelerated Lerp & Gyroscope) ---
-let manorScale = 1;
-let spaceScale = 0.15;
+const viewScale = {
+  manor: 1,
+  space: 0.15
+};
 const layers = document.querySelectorAll('.layer, .building-group, .fog-group, .title-group, .space-layer');
 
 let targetX = 0;
@@ -526,7 +516,7 @@ function animateParallax() {
     
     // Check if the layer belongs to space view or manor view
     const isSpaceLayer = layer.classList.contains('space-layer') || layer.id === 'space-overlay';
-    const currentScale = isSpaceLayer ? spaceScale : manorScale;
+    const currentScale = isSpaceLayer ? viewScale.space : viewScale.manor;
     
     // Hardware-accelerated translate3d rendering with combined scale
     layer.style.transform = `translate3d(${xOffset}px, ${yOffset}px, 0) scale(${currentScale})`;
