@@ -417,10 +417,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- Magic Space Interactions ---
   const magicSun = document.getElementById('magic-sun');
-  const loveTextBase = document.querySelector('.love-text-base');
-  const loveTextHead = document.querySelector('.love-text-head');
 
-  if (magicSun && loveTextBase && loveTextHead) {
+  if (magicSun) {
     magicSun.addEventListener('click', (e) => {
       // Prevent multiple clicks
       if (magicSun.classList.contains('spark-fired')) return;
@@ -431,97 +429,34 @@ document.addEventListener("DOMContentLoaded", () => {
       const startX = sunRect.left + sunRect.width / 2;
       const startY = sunRect.top + sunRect.height / 2;
 
-      // 2. Create Spark
+      // 2. Get Earth center
+      const earthRect = document.querySelector('.space-earth-glow').getBoundingClientRect();
+      const endX = earthRect.left + earthRect.width / 2;
+      const endY = earthRect.top + earthRect.height / 2;
+
+      // 3. Create the spark
       const spark = document.createElement('div');
       spark.className = 'magic-spark';
       document.getElementById('space-overlay').appendChild(spark);
 
-      gsap.set(spark, {
-        x: startX - 7.5,
-        y: startY - 7.5,
-        scale: 0.5,
-        opacity: 0
-      });
+      // 4. Set initial position
+      gsap.set(spark, { x: startX - 7.5, y: startY - 7.5, scale: 0 });
 
-      // 3. Ignite spark
-      gsap.to(spark, { scale: 1, opacity: 1, duration: 0.2 });
-
-      // 4. Target Earth center
-      const endX = window.innerWidth / 2;
-      const endY = window.innerHeight / 2;
-
-      // 5. Fly spark to Earth
+      // 5. Animate the spark
+      gsap.to(spark, { scale: 1, duration: 0.2 });
       gsap.to(spark, {
         x: endX - 7.5,
         y: endY - 7.5,
-        duration: 1.2,
+        duration: 1.5,
         ease: "power2.in",
         delay: 0.2,
         onComplete: () => {
           spark.remove();
-          const spaceOverlay = document.getElementById('space-overlay');
-
-          // Pause Earth Rotation on Impact
-          const spaceEarth = document.querySelector('.space-earth');
-          const spaceEarthClouds = document.querySelector('.space-earth-clouds');
-          if (spaceEarth) spaceEarth.style.animationPlayState = 'paused';
-          if (spaceEarthClouds) spaceEarthClouds.style.animationPlayState = 'paused';
-
-          // Flash effect
-          const flash = document.createElement('div');
-          flash.className = 'explosion-flash';
-          spaceOverlay.appendChild(flash);
-          gsap.set(flash, { x: endX - 75, y: endY - 75 });
-          gsap.to(flash, {
-            scale: 3,
-            opacity: 0,
-            duration: 0.5,
-            ease: "power2.out",
-            onComplete: () => flash.remove()
-          });
-
-          // Particle burst
-          for (let i = 0; i < 16; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'explosion-particle';
-            spaceOverlay.appendChild(particle);
-            
-            const angle = (i / 16) * Math.PI * 2;
-            const distance = 80 + Math.random() * 60;
-            
-            gsap.set(particle, { x: endX - 3, y: endY - 3 });
-            gsap.to(particle, {
-              x: endX - 3 + Math.cos(angle) * distance,
-              y: endY - 3 + Math.sin(angle) * distance,
-              scale: 0,
-              opacity: 0,
-              duration: 0.6 + Math.random() * 0.4,
-              ease: "power3.out",
-              onComplete: () => particle.remove()
-            });
-          }
-
-          // 6. Plasma Cutter Effect
-          const loveTextBase = document.querySelector('.love-text-base');
-          const loveTextHead = document.querySelector('.love-text-head');
           
-          gsap.to([loveTextBase, loveTextHead], { opacity: 1, duration: 0.1 });
-          
-          // Apply violent screen shake to Earth Wrapper instead of Earth to preserve rotation state
-          const spaceEarthWrapper = document.querySelector('.space-earth-wrapper');
-          if (spaceEarthWrapper) spaceEarthWrapper.classList.add('earth-shaking');
-
-          gsap.to([loveTextBase, loveTextHead], {
-            strokeDashoffset: 0,
-            duration: 4,
-            ease: "power2.inOut",
-            onComplete: () => {
-              // Fade out the bright plasma head when finished
-              gsap.to(loveTextHead, { opacity: 0, duration: 0.5 });
-              // Stop the shaking
-              if (spaceEarthWrapper) spaceEarthWrapper.classList.remove('earth-shaking');
-            }
-          });
+          // Reset the sun so it can be clicked again
+          setTimeout(() => {
+            magicSun.classList.remove('spark-fired');
+          }, 1000);
         }
       });
     });

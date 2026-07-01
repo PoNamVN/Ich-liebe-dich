@@ -174,34 +174,7 @@
             <div class="space-earth"></div>
             <div class="space-earth-clouds"></div>
 
-            <!-- Fiery SVG Drawing Layer (Placed outside so it stays upright) -->
-            <svg id="love-svg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <filter id="hyper-lava" x="-50%" y="-50%" width="200%" height="200%">
-                  <!-- 1. Generate fractal noise for chaotic heat distortion -->
-                  <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="4" result="noise" />
-                  
-                  <!-- 2. Heavily warp the original text to look like liquid magma -->
-                  <feDisplacementMap in="SourceGraphic" in2="noise" scale="12" xChannelSelector="R" yChannelSelector="G" result="melted" />
-                  
-                  <!-- 3. Create a dark scorched earth (charred crust) around the lava -->
-                  <feMorphology operator="dilate" radius="4" in="melted" result="dilated_scorch" />
-                  <feFlood flood-color="#1a0000" flood-opacity="0.95" result="scorch_color" />
-                  <feComposite operator="in" in="scorch_color" in2="dilated_scorch" result="scorch_mark" />
-                  <feGaussianBlur stdDeviation="2" in="scorch_mark" result="blurred_scorch" />
-                  
-                  <!-- 4. Layer the bright magma over the scorched earth -->
-                  <feMerge>
-                    <feMergeNode in="blurred_scorch" />
-                    <feMergeNode in="melted" />
-                  </feMerge>
-                </filter>
-              </defs>
-              <!-- Lava Trail that stays behind -->
-              <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" class="love-text-base" filter="url(#hyper-lava)">I ❤ U</text>
-              <!-- Bright Plasma Cutter Head that travels along the path -->
-              <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" class="love-text-head">I ❤ U</text>
-            </svg>
+
 
             <!-- Solar System Orbits (Separated for different speeds) -->
             <div class="sun-orbit">

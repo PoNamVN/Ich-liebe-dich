@@ -969,60 +969,7 @@ html, body {
   100% { transform: rotate(360deg) scale(1.1); }
 }
 
-/* --- Fiery SVG Text (Lava Scar) --- */
-#love-svg {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 50vw;
-  height: 50vw;
-  min-width: 300px;
-  min-height: 300px;
-  max-width: 800px;
-  max-height: 800px;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  z-index: 15;
-}
 
-.love-text-base, .love-text-head {
-  font-family: 'Brush Script MT', 'Dancing Script', cursive;
-  font-size: 100px;
-  font-weight: bold;
-  fill: transparent;
-  opacity: 0;
-}
-
-.love-text-base {
-  stroke: #ff9900; /* Bright magma core */
-  stroke-width: 6px; /* Thick scar */
-  filter: drop-shadow(0 0 10px #ff3300) drop-shadow(0 0 30px #ff0000);
-  mix-blend-mode: color-dodge; /* Burns into the earth background */
-  stroke-dasharray: 800;
-  stroke-dashoffset: 800;
-}
-
-.love-text-head {
-  stroke: #ffffff; /* Blinding white plasma */
-  stroke-width: 6px;
-  stroke-linecap: round;
-  filter: drop-shadow(0 0 10px #ffffff) drop-shadow(0 0 30px #44aaff);
-  stroke-dasharray: 1 800; /* Extremely short 1px dot trailing an 800px gap */
-  stroke-dashoffset: 800;
-}
-
-/* --- Earth Energy Shake --- */
-@keyframes energyShake {
-  0% { transform: translate(-50%, -50%) rotate(0deg); }
-  25% { transform: translate(calc(-50% + 3px), calc(-50% - 3px)) rotate(0.5deg); }
-  50% { transform: translate(calc(-50% - 3px), calc(-50% + 3px)) rotate(-0.5deg); }
-  75% { transform: translate(calc(-50% - 3px), calc(-50% - 3px)) rotate(0.5deg); }
-  100% { transform: translate(calc(-50% + 3px), calc(-50% + 3px)) rotate(-0.5deg); }
-}
-
-.earth-shaking {
-  animation: energyShake 0.1s linear infinite !important;
-}
 
 /* --- Magic Spark --- */
 .magic-spark {
@@ -1035,29 +982,6 @@ html, body {
   pointer-events: none;
   z-index: 50;
   mix-blend-mode: screen;
-}
-
-/* --- Explosion Particles --- */
-.explosion-particle {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  background: #fff;
-  border-radius: 50%;
-  box-shadow: 0 0 10px 5px #ffeb3b, 0 0 20px 10px #ff9800;
-  pointer-events: none;
-  z-index: 51;
-}
-
-.explosion-flash {
-  position: absolute;
-  width: 150px;
-  height: 150px;
-  background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,170,0,0.8) 30%, transparent 70%);
-  border-radius: 50%;
-  mix-blend-mode: screen;
-  pointer-events: none;
-  z-index: 50;
 }
 
 /* --- New Cinematic Space Layers --- */
