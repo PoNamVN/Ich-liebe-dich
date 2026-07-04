@@ -117,9 +117,24 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Change Season Manager (Lerp & Particle Swaps)
-  function changeSeason(season) {
-    currentSeason = season;
+    // Change Season Manager (Lerp & Particle Swaps)
+    let lightningInterval;
+    function changeSeason(season) {
+      currentSeason = season;
+      
+      clearInterval(lightningInterval);
+      if (season === 'autumn') {
+        lightningInterval = setInterval(() => {
+          if (Math.random() > 0.6) {
+            const flash = document.querySelector('.lightning-flash');
+            if (flash) {
+              flash.classList.remove('flash-active');
+              void flash.offsetWidth; 
+              flash.classList.add('flash-active');
+            }
+          }
+        }, 4000);
+      }
     
     // 1. Highlight links on circle wheel
     seasonLinks.forEach(l => {
@@ -152,8 +167,8 @@ document.addEventListener("DOMContentLoaded", () => {
           particleContainer.innerHTML = '';
           
           // Fire up the corresponding particle system
-          if (season === 'spring') initSakuraRain();
-          else if (season === 'summer') initGreenLeaves();
+          if (season === 'spring') { initSakuraRain(); initSpores(); }
+          else if (season === 'summer') { initGreenLeaves(); initFireflies(); }
           else if (season === 'autumn') initAutumnLeaves();
           else if (season === 'winter') initSnowflakes();
 
@@ -257,22 +272,23 @@ document.addEventListener("DOMContentLoaded", () => {
       
       container.appendChild(leaf);
       
+      // Strong wind drift for Autumn
       gsap.fromTo(leaf, 
         { 
-          y: -50, 
-          x: Math.random() * (window.innerWidth + 200),
+          y: Math.random() * window.innerHeight - 200, 
+          x: window.innerWidth + 100,
           rotation: Math.random() * 360,
-          opacity: Math.random() * 0.4 + 0.4
+          opacity: Math.random() * 0.5 + 0.5
         },
         { 
-          y: window.innerHeight + 50, 
-          x: "-=" + (Math.random() * 350 + 150), 
-          rotation: "+=" + (Math.random() * 720), 
+          y: "+=" + (Math.random() * 400 + 100), 
+          x: -100, 
+          rotation: "-=" + (Math.random() * 1080), 
           opacity: 0,
-          duration: Math.random() * 9 + 6, 
-          ease: "none", 
+          duration: Math.random() * 3 + 2.5, 
+          ease: "power1.inOut", 
           repeat: -1, 
-          delay: Math.random() * -15 
+          delay: Math.random() * -5 
         }
       );
     }
@@ -288,20 +304,21 @@ document.addEventListener("DOMContentLoaded", () => {
       const snow = document.createElement("div");
       snow.classList.add("css-snowflake");
 
-      const size = Math.random() * 4 + 1; 
+      const size = Math.random() * 5 + 1.5; 
       const startX = Math.random() * 100; 
-      const fallDuration = Math.random() * 10 + 6; 
+      const fallDuration = Math.random() * 8 + 4; // Faster snow
       const delay = Math.random() * -15; 
-      const sway = (Math.random() - 0.5) * 12; 
+      const sway = (Math.random() - 0.5) * 15; 
 
       snow.style.width = size + 'px';
       snow.style.height = size + 'px';
       snow.style.left = startX + 'vw';
-      snow.style.opacity = Math.random() * 0.5 + 0.3;
+      snow.style.opacity = Math.random() * 0.6 + 0.4;
+      snow.style.boxShadow = `0 0 ${size * 2}px rgba(255, 255, 255, 0.8)`; // Glow
       
       // Hardware-accelerated blur/depth sorting
-      if (size < 2.5) {
-        snow.style.filter = 'blur(1px)';
+      if (size < 3) {
+        snow.style.filter = 'blur(1.5px)';
       }
 
       snow.style.setProperty('--sway-distance', sway + 'vw');
@@ -309,6 +326,67 @@ document.addEventListener("DOMContentLoaded", () => {
       snow.style.animationDelay = `${delay}s`;
 
       container.appendChild(snow);
+    }
+  }
+
+  function initFireflies() {
+    const container = document.getElementById("particle-container");
+    if (!container) return;
+
+    const count = isMobile ? 15 : 30;
+    for (let i = 0; i < count; i++) {
+      const firefly = document.createElement("div");
+      firefly.classList.add("firefly");
+      container.appendChild(firefly);
+      
+      gsap.fromTo(firefly, 
+        { 
+          y: window.innerHeight + 20, 
+          x: Math.random() * window.innerWidth,
+          opacity: 0,
+          scale: Math.random() * 0.5 + 0.5
+        },
+        { 
+          y: Math.random() * (window.innerHeight / 2), 
+          x: "+=" + (Math.random() * 200 - 100),
+          opacity: Math.random() * 0.8 + 0.2,
+          duration: Math.random() * 4 + 3,
+          ease: "sine.inOut",
+          yoyo: true,
+          repeat: -1,
+          delay: Math.random() * -10 
+        }
+      );
+    }
+  }
+
+  function initSpores() {
+    const container = document.getElementById("particle-container");
+    if (!container) return;
+
+    const count = isMobile ? 20 : 50;
+    for (let i = 0; i < count; i++) {
+      const spore = document.createElement("div");
+      spore.classList.add("spore");
+      container.appendChild(spore);
+      
+      gsap.fromTo(spore, 
+        { 
+          y: Math.random() * window.innerHeight, 
+          x: Math.random() * window.innerWidth,
+          opacity: 0
+        },
+        { 
+          y: "-=" + (Math.random() * 100 + 50), 
+          x: "+=" + (Math.random() * 100 - 50),
+          opacity: Math.random() * 0.6 + 0.1,
+          duration: Math.random() * 5 + 3,
+          ease: "sine.inOut",
+          yoyo: true,
+          repeat: -1,
+          delay: Math.random() * -10 
+        }
+      );
     }
   }
 
@@ -465,30 +543,49 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-// --- 5. Parallax Core Engine (Hardware Accelerated Lerp & Gyroscope) ---
+// --- 5. Parallax Core Engine (Hardware Accelerated Lerp) ---
 const viewScale = {
   manor: 1,
   space: 0.15
 };
 const layers = document.querySelectorAll('.layer, .building-group, .fog-group, .title-group, .space-layer');
+const parallaxViewport = document.getElementById('parallax-viewport');
 
 let targetX = 0;
 let targetY = 0;
 let currentX = 0;
 let currentY = 0;
 
+let targetWind = 0;
+let currentWind = 0;
+let lastMouseX = window.innerWidth / 2;
+
 // Mouse coordinates logic
 window.addEventListener('mousemove', (e) => {
-  targetX = (window.innerWidth / 2 - e.clientX) / 25;
-  targetY = (window.innerHeight / 2 - e.clientY) / 25;
+  const cx = window.innerWidth / 2;
+  const cy = window.innerHeight / 2;
+  
+  targetX = (cx - e.clientX) / 25;
+  targetY = (cy - e.clientY) / 25;
+  
+  // Wind force calculation based on speed
+  const speedX = e.clientX - lastMouseX;
+  targetWind = speedX * 1.5;
+  lastMouseX = e.clientX;
 });
 
 // Touch swipe logic (Mobile fallback helper)
 window.addEventListener('touchmove', (e) => {
   if (e.touches.length > 0) {
     const touch = e.touches[0];
-    targetX = (window.innerWidth / 2 - touch.clientX) / 12;
-    targetY = (window.innerHeight / 2 - touch.clientY) / 12;
+    const cx = window.innerWidth / 2;
+    const cy = window.innerHeight / 2;
+    targetX = (cx - touch.clientX) / 12;
+    targetY = (cy - touch.clientY) / 12;
+    
+    const speedX = touch.clientX - lastMouseX;
+    targetWind = speedX * 2;
+    lastMouseX = touch.clientX;
   }
 }, { passive: true });
 
@@ -506,12 +603,16 @@ window.addEventListener('deviceorientation', (e) => {
 
 // Unified requestAnimationFrame Loop (Calculated per screen refresh frame)
 function animateParallax() {
-  const easing = 0.05;         // Snappy but heavy slide response (similar to alfoart settings)
-  const speedMultiplierX = 85;  // Horizontal 3D depth multiplier
-  const speedMultiplierY = 85;  // Vertical 3D depth multiplier
+  const easing = 0.05;         
+  const speedMultiplierX = 85;  
+  const speedMultiplierY = 85;  
 
   currentX += (targetX - currentX) * easing;
   currentY += (targetY - currentY) * easing;
+  
+  currentWind += (targetWind - currentWind) * 0.1;
+  document.documentElement.style.setProperty('--wind-x', `${currentWind}px`);
+  targetWind *= 0.9; // auto-decelerate wind
 
   layers.forEach(layer => {
     if (!layer) return; 
