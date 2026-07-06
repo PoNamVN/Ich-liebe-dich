@@ -243,6 +243,24 @@ html, body {
   pointer-events: none;
 }
 
+.space-earth-clouds {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 31vw;
+  height: 31vw;
+  min-width: 300px;
+  min-height: 300px;
+  border-radius: 50%;
+  background-image: url('/clouds.png');
+  background-size: cover;
+  opacity: 0.4;
+  z-index: 12;
+  mix-blend-mode: screen;
+  animation: cloudsRotate 160s linear infinite;
+  pointer-events: none;
+}
+
 .moon-bg {
   position: absolute;
   width: 15vw;
@@ -843,18 +861,195 @@ html, body {
 
 .space-earth-wrapper {
   position: absolute;
-  top: -5vh; /* Perfect vertical balance */
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 50%; 
+  left: 50%;
+  width: 0;
+  height: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 10;
 }
 
+/* --- Cinematic Zoom Wrappers --- */
+.milky-way-wrapper {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 0; height: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+  perspective: 1500px;
+  transform-style: preserve-3d;
+}
+
+.galaxy-image {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 150vw;
+  height: 150vw;
+  min-width: 1000px;
+  min-height: 1000px;
+  background-image: url('/galaxy-3d.png?v=1');
+  background-size: cover;
+  background-position: center;
+  border-radius: 50%;
+  mix-blend-mode: screen;
+  opacity: 0.95;
+  animation: galaxyRotate3D 150s linear infinite;
+  pointer-events: none;
+  transform: translate(-50%, -50%) rotateX(65deg) rotateZ(0deg);
+  will-change: transform;
+  box-shadow: inset 0 0 100px rgba(0,0,0,1);
+}
+
+@keyframes galaxyRotate3D {
+  0% { transform: translate(-50%, -50%) rotateX(65deg) rotateZ(0deg); }
+  100% { transform: translate(-50%, -50%) rotateX(65deg) rotateZ(360deg); }
+}
+
+@keyframes galaxyRotate {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.solar-system-wrapper {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 0; height: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  will-change: transform, opacity;
+}
+
+.sun-system-container {
+  position: absolute;
+  width: 0; height: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  will-change: transform;
+  /* Transform is handled by JS to pan the camera from Earth to Sun */
+}
+
+/* Solar System Sun */
+.solar-system-sun {
+  position: absolute;
+  width: 12vw;
+  height: 12vw;
+  min-width: 100px;
+  min-height: 100px;
+  border-radius: 50%;
+  background-image: url('https://upload.wikimedia.org/wikipedia/commons/b/b4/The_Sun_by_the_Atmospheric_Imaging_Assembly_of_NASA%27s_Solar_Dynamics_Observatory_-_20100819.jpg');
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 0 40px #ffcc00, 0 0 80px rgba(255, 102, 0, 0.8), 0 0 150px rgba(255, 102, 0, 0.4), inset -10px -10px 40px rgba(200, 50, 0, 0.5);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  animation: sunPulse 4s infinite alternate;
+}
+
+@keyframes sunPulse {
+  0% { box-shadow: 0 0 40px #ffcc00, 0 0 80px rgba(255, 102, 0, 0.8), 0 0 150px rgba(255, 102, 0, 0.4), inset -10px -10px 40px rgba(200, 50, 0, 0.5); }
+  100% { box-shadow: 0 0 60px #ffcc00, 0 0 120px rgba(255, 102, 0, 0.9), 0 0 200px rgba(255, 102, 0, 0.6), inset -10px -10px 40px rgba(200, 50, 0, 0.5); }
+}
+
+/* Orbits - Lines Hidden as requested */
+.orbit-mercury, .orbit-venus, .orbit-earth, .orbit-mars, .orbit-jupiter, .orbit-saturn, .orbit-uranus, .orbit-neptune {
+  position: absolute;
+  border-radius: 50%;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  will-change: transform;
+}
+
+/* Base sizing and scientifically accurate speeds for all 8 planets (Earth = 30s) */
+.orbit-mercury { width: 12vw; height: 12vw; animation: earthRotate 7.2s linear infinite; animation-delay: -2s; }
+.orbit-venus   { width: 18vw; height: 18vw; animation: earthRotate 18.6s linear infinite; animation-delay: -10s; }
+/* Earth orbit is static so Earth stays locked to the center of the screen */
+.orbit-earth   { width: 24vw; height: 24vw; }
+.orbit-mars    { width: 30vw; height: 30vw; animation: earthRotate 56.4s linear infinite; animation-delay: -40s; }
+.orbit-jupiter { width: 42vw; height: 42vw; animation: earthRotate 355.8s linear infinite; animation-delay: -100s; }
+.orbit-saturn  { width: 54vw; height: 54vw; animation: earthRotate 883.8s linear infinite; animation-delay: -500s; }
+.orbit-uranus  { width: 66vw; height: 66vw; animation: earthRotate 2520s linear infinite; animation-delay: -1000s; }
+.orbit-neptune { width: 76vw; height: 76vw; animation: earthRotate 4944s linear infinite; animation-delay: -2000s; }
+
+/* Planet Styles - High Resolution Textures & Perfect Circumference Placement */
+.planet-mercury, .planet-venus, .planet-earth, .planet-mars, .planet-jupiter, .planet-saturn, .planet-uranus, .planet-neptune {
+  position: absolute; 
+  top: 50%; right: 0;
+  transform: translate(50%, -50%); /* Places center of planet exactly on the orbit ring */
+  background-size: cover; 
+  background-position: center;
+  border-radius: 50%;
+}
+
+.planet-mercury {
+  width: 8px; height: 8px;
+  background-image: url('https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?q=80&w=400');
+  box-shadow: inset -2px -2px 4px rgba(0,0,0,0.8), inset 1px 1px 2px rgba(255,255,255,0.4);
+}
+
+.planet-venus {
+  width: 12px; height: 12px;
+  background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/a9/PIA23791-Venus-RealAndEnhancedColorsViews-20200608_%28cropped2%29.jpg');
+  box-shadow: inset -3px -3px 6px rgba(0,0,0,0.8), inset 1px 1px 2px rgba(255,255,255,0.4);
+}
+
+.planet-earth {
+  width: 14px; height: 14px;
+  background-image: url('/earth-space.png?v=6');
+  box-shadow: inset -3px -3px 6px rgba(0,0,0,0.8), inset 1px 1px 2px rgba(255,255,255,0.4);
+}
+
+.planet-mars {
+  width: 12px; height: 12px;
+  background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/02/OSIRIS_Mars_true_color.jpg');
+  box-shadow: inset -3px -3px 6px rgba(0,0,0,0.8), inset 1px 1px 2px rgba(255,255,255,0.4);
+}
+
+.planet-jupiter {
+  width: 32px; height: 32px;
+  background-image: url('https://upload.wikimedia.org/wikipedia/commons/e/e2/Jupiter.jpg');
+  box-shadow: inset -6px -6px 15px rgba(0,0,0,0.9), inset 2px 2px 5px rgba(255,255,255,0.4);
+}
+
+.planet-saturn {
+  width: 26px; height: 26px;
+  background-image: url('https://upload.wikimedia.org/wikipedia/commons/b/b4/Saturn_%28planet%29_large.jpg');
+  background-size: 250%; background-position: center; /* Crop center of saturn to avoid baked rings */
+  box-shadow: inset -5px -5px 12px rgba(0,0,0,0.9), inset 2px 2px 5px rgba(255,255,255,0.4);
+}
+
+.saturn-ring {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 50px; height: 16px;
+  border-radius: 50%;
+  border: 4px solid rgba(220, 205, 175, 0.7);
+  box-shadow: 0 0 0 2px rgba(200, 180, 140, 0.3), inset 0 0 0 2px rgba(200, 180, 140, 0.3);
+  transform: translate(-50%, -50%) rotate(20deg);
+}
+
+.planet-uranus {
+  width: 18px; height: 18px;
+  background-image: url('https://upload.wikimedia.org/wikipedia/commons/3/3d/Uranus2.jpg');
+  box-shadow: inset -4px -4px 8px rgba(0,0,0,0.8), inset 1px 1px 3px rgba(255,255,255,0.4);
+}
+
+.planet-neptune {
+  width: 18px; height: 18px;
+  background-image: url('https://upload.wikimedia.org/wikipedia/commons/5/56/Neptune_Full.jpg');
+  box-shadow: inset -4px -4px 8px rgba(0,0,0,0.8), inset 1px 1px 3px rgba(255,255,255,0.4);
+}
+
 .space-earth-glow {
   position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
   width: 30vw;
   height: 30vw;
   min-width: 290px;
@@ -867,6 +1062,9 @@ html, body {
 }
 
 .space-earth {
+  position: absolute;
+  top: 50%; left: 50%;
+  /* Transform translate(-50%, -50%) is handled by the animation */
   width: 30vw;
   height: 30vw;
   min-width: 290px;
@@ -875,7 +1073,6 @@ html, body {
   background-image: url('/earth-space.png?v=6');
   background-size: 105% 105%;
   background-position: center;
-  position: relative;
   overflow: hidden;
   box-shadow: inset -45px -45px 90px rgba(0,0,0,0.98),
               inset 15px 15px 35px rgba(255,255,255,0.22);
@@ -885,8 +1082,8 @@ html, body {
 }
 
 @keyframes earthRotate {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 

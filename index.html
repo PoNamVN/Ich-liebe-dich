@@ -9,6 +9,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./style.css" />
+    
+    <!-- Preload Planet Textures to fix zoom lag -->
+    <link rel="preload" href="https://upload.wikimedia.org/wikipedia/commons/b/b4/The_Sun_by_the_Atmospheric_Imaging_Assembly_of_NASA%27s_Solar_Dynamics_Observatory_-_20100819.jpg" as="image">
+    <link rel="preload" href="https://upload.wikimedia.org/wikipedia/commons/e/e2/Jupiter.jpg" as="image">
+    <link rel="preload" href="https://upload.wikimedia.org/wikipedia/commons/b/b4/Saturn_%28planet%29_large.jpg" as="image">
+    <link rel="preload" href="https://upload.wikimedia.org/wikipedia/commons/0/02/OSIRIS_Mars_true_color.jpg" as="image">
+    <link rel="preload" href="https://upload.wikimedia.org/wikipedia/commons/a/a9/PIA23791-Venus-RealAndEnhancedColorsViews-20200608_%28cropped2%29.jpg" as="image">
+    <link rel="preload" href="/earth-space.png?v=6" as="image">
   </head>
   <body class="home parallax-spring spring"> <!-- Default is Spring -->
     <!-- Preloader -->
@@ -174,8 +182,29 @@
           <div class="space-nebula"></div>
         </div>
         
-        <!-- Glowing, rotating Earth in space -->
+        <!-- Cinematic Zoom Wrappers -->
         <div class="space-layer" data-depth="0.035">
+          <!-- Milky Way Wrapper -->
+          <div class="milky-way-wrapper">
+            <div class="galaxy-image"></div>
+          </div>
+          
+          <div class="solar-system-wrapper">
+            <div class="sun-system-container">
+              <div class="solar-system-sun"></div>
+              
+              <div class="orbit-mercury"><div class="planet-mercury"></div></div>
+              <div class="orbit-venus"><div class="planet-venus"></div></div>
+              <div class="orbit-earth"><div class="planet-earth"></div></div>
+              <div class="orbit-mars"><div class="planet-mars"></div></div>
+              <div class="orbit-jupiter"><div class="planet-jupiter"></div></div>
+              <div class="orbit-saturn"><div class="planet-saturn"><div class="saturn-ring"></div></div></div>
+              <div class="orbit-uranus"><div class="planet-uranus"></div></div>
+              <div class="orbit-neptune"><div class="planet-neptune"></div></div>
+            </div>
+          </div>
+          
+          <!-- Earth Wrapper -->
           <div class="space-earth-wrapper">
             <!-- Rotating stars layer centered on Earth -->
             <div class="space-rotating-stars"></div>
@@ -183,8 +212,6 @@
             <div class="space-earth-glow"></div>
             <div class="space-earth"></div>
             <div class="space-earth-clouds"></div>
-
-
 
             <!-- Solar System Orbits (Separated for different speeds) -->
             <div class="sun-orbit">
@@ -209,7 +236,8 @@
           </div>
         </div>
 
-
+        <!-- Canvas for Warp Speed and Text Formation -->
+        <canvas id="space-canvas" style="position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 50; display: none;"></canvas>
 
         <!-- Space User Interface (Return button and caption) -->
         <div class="space-ui">

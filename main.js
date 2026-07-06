@@ -421,6 +421,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // 2. Show space overlay
       spaceOverlay.style.display = 'block';
+      const canvas = document.getElementById('space-canvas');
+      if(canvas) canvas.style.display = 'block';
       gsap.fromTo(spaceOverlay, 
         { opacity: 0 },
         { opacity: 1, duration: 1.2, ease: "power2.inOut" }
@@ -473,6 +475,12 @@ document.addEventListener("DOMContentLoaded", () => {
         ease: "power2.inOut",
         onComplete: () => {
           spaceOverlay.style.display = 'none';
+          const canvas = document.getElementById('space-canvas');
+          if(canvas) canvas.style.display = 'none';
+          // Reset scroll effect if it exists
+          if (typeof window.resetSpaceScroll === 'function') {
+            window.resetSpaceScroll();
+          }
         }
       });
 
@@ -538,6 +546,488 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
     });
+  }
+
+  // --- 4.5 Space Cinematic Canvas Effects ---
+  const canvas = document.getElementById('space-canvas');
+  const ctx = canvas ? canvas.getContext('2d') : null;
+  let targetSpaceScrollProgress = 0;
+  let spaceScrollProgress = 0;
+  let textParticles = [];
+  let stars = [];
+  let textPoints = [];
+  
+  // Expose reset function for return button
+  window.resetSpaceScroll = () => {
+    targetSpaceScrollProgress = 0;
+    spaceScrollProgress = 0;
+    const earthWrapper = document.querySelector('.space-earth-wrapper');
+    const bgLayer = document.querySelector('.space-bg');
+    const nebula = document.querySelector('.space-nebula');
+    if (earthWrapper) earthWrapper.style.opacity = 1;
+    if (bgLayer) bgLayer.style.opacity = 1;
+    if (nebula) {
+      nebula.style.filter = `hue-rotate(0deg)`;
+      nebula.style.opacity = 1;
+    }
+    if (canvas && typeof initParticles === 'function') {
+       initParticles(); // reset particles to scattered positions
+    }
+  };
+  
+  const initParticles = () => {
+    if(!canvas) return;
+    stars = [];
+    const numStars = textPoints.length + 1200; // Lots of purely background stars
+    for (let i = 0; i < numStars; i++) {
+      const dest = i < textPoints.length ? textPoints[i] : null;
+      
+      // Random 3D space coords relative to center (0,0)
+      const x = (Math.random() - 0.5) * canvas.width * 4;
+      const y = (Math.random() - 0.5) * canvas.height * 4;
+      const z = Math.random() * 2000 + 100;
+      
+      // Dest is in screen coords, so we center it around 0 for 3D math
+      const dX = dest ? dest.x - canvas.width/2 : (Math.random() - 0.5) * canvas.width * 2;
+      const dY = dest ? dest.y - canvas.height/2 : (Math.random() - 0.5) * canvas.height * 2;
+      const dZ = dest ? 300 : Math.random() * 800 + 100; // Text forms at a focal depth of 300
+      
+      stars.push({
+        x: x, y: y, z: z,
+        originX: x, originY: y, originZ: z,
+        destX: dX, destY: dY, destZ: dZ,
+        size: Math.random() * 1.5 + 0.5,
+        baseSize: dest ? Math.random() * 1.5 + 1.5 : Math.random() * 1 + 0.5,
+        isTextPart: dest !== null,
+        hue: dest ? (190 + Math.random() * 30) : (220 + Math.random() * 60), // Cyan/Blue palette
+        offset: Math.random() * 100
+      });
+    }
+  };
+
+  if (canvas && ctx) {
+    // Resize handler
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      getTextPoints();
+    };
+    
+    // Extract pixel coordinates for the text
+    const getTextPoints = () => {
+      textPoints = [];
+      const tempCanvas = document.createElement('canvas');
+      const tCtx = tempCanvas.getContext('2d');
+      tempCanvas.width = canvas.width;
+      tempCanvas.height = canvas.height;
+      
+      tCtx.fillStyle = 'white';
+      // Responsive font size
+      let fontSize = window.innerWidth < 768 ? 55 : 130; // Made text even larger
+      tCtx.font = `bold ${fontSize}px "Merriweather", serif`;
+      tCtx.textAlign = 'center';
+      tCtx.textBaseline = 'middle';
+      
+      // Multiline text if mobile
+      if (window.innerWidth < 768) {
+         tCtx.fillText("Will You be", tempCanvas.width / 2, tempCanvas.height / 2 - 40);
+         tCtx.fillText("my girlfriend?", tempCanvas.width / 2, tempCanvas.height / 2 + 40);
+      } else {
+         tCtx.fillText("Will You be my girlfriend?", tempCanvas.width / 2, tempCanvas.height / 2);
+      }
+      
+      const imgData = tCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height).data;
+      // Sample every Nth pixel to create particles
+      // Increasing step reduces the number of particles, creating a true constellation look and reducing glare
+      const step = window.innerWidth < 768 ? 5 : 8;
+      for (let y = 0; y < tempCanvas.height; y += step) {
+        for (let x = 0; x < tempCanvas.width; x += step) {
+          const alpha = imgData[(y * tempCanvas.width + x) * 4 + 3];
+          if (alpha > 128) {
+            // Add slight randomness to points for natural look
+            textPoints.push({ 
+                x: x + (Math.random() - 0.5) * 2, 
+                y: y + (Math.random() - 0.5) * 2 
+            });
+          }
+        }
+      }
+      
+      initParticles();
+    };
+    
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas(); // Initial call
+    
+    // Scroll handling (0 to 1) target update
+    const updateScrollProgress = (deltaY) => {
+      if (!isSpaceView) return;
+      let speed = window.innerWidth < 768 ? 0.005 : 0.003;
+      
+      // Cinematic slow down for Solar System and Milky Way (0.0 -> 0.80)
+      if (targetSpaceScrollProgress < 0.80) {
+          speed *= 0.10; // Scroll EXTREMELY slowly to admire the phases
+      } else {
+          speed *= 0.02; // Very slow down for text formation to make the effect last longer
+      }
+      
+      targetSpaceScrollProgress += deltaY * speed;
+      targetSpaceScrollProgress = Math.max(0, Math.min(1, targetSpaceScrollProgress));
+    };
+    
+    // Smooth DOM updater (called every frame)
+    const updateDOMForScroll = () => {
+      // Lerp smooth scroll
+      spaceScrollProgress += (targetSpaceScrollProgress - spaceScrollProgress) * 0.12;
+      if (Math.abs(targetSpaceScrollProgress - spaceScrollProgress) < 0.001) {
+          spaceScrollProgress = targetSpaceScrollProgress;
+      }
+      
+      // DOM Elements
+      const earthWrapper = document.querySelector('.space-earth-wrapper');
+      const solarSystemWrapper = document.querySelector('.solar-system-wrapper');
+      const milkyWayWrapper = document.querySelector('.milky-way-wrapper');
+      const spaceCaption = document.querySelector('.space-caption');
+      const bgLayer = document.querySelector('.space-bg');
+      const nebula = document.querySelector('.space-nebula');
+      
+      // Calculate continuous Earth orbit angle for camera tracking
+      const time = Date.now();
+      const earthAngleDeg = (time % 30000) / 30000 * 360;
+      const earthAngleRad = earthAngleDeg * Math.PI / 180;
+      
+      const orbitEarth = document.querySelector('.orbit-earth');
+      if (orbitEarth) {
+          // Keep Earth physically rotating around the Sun
+          orbitEarth.style.transform = `translate(-50%, -50%) rotate(${earthAngleDeg}deg)`;
+      }
+      
+      // Phase 0: 0.00 -> 0.15 (Earth -> Solar System)
+      if (earthWrapper && solarSystemWrapper) {
+          if (spaceScrollProgress <= 0.15) {
+              const p = spaceScrollProgress / 0.15;
+              earthWrapper.style.transform = `scale(${1 - p})`;
+              earthWrapper.style.opacity = Math.max(0, 1 - p * 2);
+              
+              solarSystemWrapper.style.transform = `scale(${15 - 14 * p})`;
+              solarSystemWrapper.style.opacity = Math.min(1, p * 2);
+          } else {
+              earthWrapper.style.opacity = 0;
+          }
+      }
+      
+      const sunSystemContainer = document.querySelector('.sun-system-container');
+      if (solarSystemWrapper && milkyWayWrapper && sunSystemContainer) {
+         
+         if (spaceScrollProgress <= 0.15) {
+             // Phase 0: Zoom out to Solar System
+             milkyWayWrapper.style.opacity = 0;
+         } else if (spaceScrollProgress <= 0.25) {
+             // Phase 1: Admire Solar System (0.15 -> 0.25)
+             solarSystemWrapper.style.transform = `scale(1)`;
+             solarSystemWrapper.style.opacity = 1;
+             milkyWayWrapper.style.opacity = 0;
+         } else if (spaceScrollProgress <= 0.35) {
+             // Phase 2: Solar System Shrinks (0.25 -> 0.35)
+             const p = (spaceScrollProgress - 0.25) / 0.10;
+             solarSystemWrapper.style.transform = `scale(${1 - p})`;
+             solarSystemWrapper.style.opacity = Math.max(0, 1 - p * 2);
+             milkyWayWrapper.style.opacity = 0;
+         } else if (spaceScrollProgress <= 0.45) {
+             // Phase 3: Milky Way Appears (0.35 -> 0.45)
+             solarSystemWrapper.style.opacity = 0;
+             const p = (spaceScrollProgress - 0.35) / 0.10;
+             milkyWayWrapper.style.transform = `scale(${4 - 3 * p})`;
+             milkyWayWrapper.style.opacity = p;
+         } else if (spaceScrollProgress <= 0.55) {
+             // Phase 4: Admire Milky Way (0.45 -> 0.55)
+             solarSystemWrapper.style.opacity = 0;
+             milkyWayWrapper.style.transform = `scale(1)`;
+             milkyWayWrapper.style.opacity = 1;
+         } else if (spaceScrollProgress <= 0.65) {
+             // Phase 5: Milky Way Shrinks (0.55 -> 0.65)
+             const p = (spaceScrollProgress - 0.55) / 0.10;
+             solarSystemWrapper.style.opacity = 0;
+             milkyWayWrapper.style.transform = `scale(${1 - p})`;
+             solarSystemWrapper.style.opacity = Math.max(0, 1 - p * 2);
+         } else {
+             solarSystemWrapper.style.opacity = 0;
+             milkyWayWrapper.style.opacity = 0;
+         }
+         
+         // Apply Geocentric Camera Tracking dynamically - ALWAYS LOCKED TO EARTH!
+         sunSystemContainer.style.transform = `translate(${-12 * Math.cos(earthAngleRad)}vw, ${-12 * Math.sin(earthAngleRad)}vw)`;
+      }
+
+      if (spaceCaption) {
+        const captionOpacity = 1 - Math.min(1, spaceScrollProgress / 0.15);
+        spaceCaption.style.opacity = Math.max(0, captionOpacity);
+      }
+      
+      if (bgLayer) {
+        bgLayer.style.opacity = 1 - spaceScrollProgress * 0.5;
+      }
+      
+      if (nebula) {
+        nebula.style.filter = `hue-rotate(${spaceScrollProgress * 180}deg)`;
+        const pN = Math.max(0, spaceScrollProgress - 0.4) / 0.6;
+        nebula.style.opacity = 1 - pN;
+      }
+    };
+    
+    window.addEventListener('wheel', (e) => {
+      if (isSpaceView) {
+        updateScrollProgress(e.deltaY);
+      }
+    }, { passive: true });
+    
+    let lastTouchY = 0;
+    window.addEventListener('touchstart', (e) => {
+      lastTouchY = e.touches[0].clientY;
+    }, { passive: true });
+    window.addEventListener('touchmove', (e) => {
+      if (isSpaceView) {
+        const deltaY = lastTouchY - e.touches[0].clientY;
+        lastTouchY = e.touches[0].clientY;
+        updateScrollProgress(deltaY * 3);
+      }
+    }, { passive: true });
+    
+    const focalLength = 300;
+    const time = { current: 0 };
+
+    // Animation Loop
+    const drawCanvas = () => {
+      if (!isSpaceView) {
+        requestAnimationFrame(drawCanvas);
+        return;
+      }
+      time.current += 0.016; // Approx 60fps time delta
+      
+      // Update DOM elements smoothly
+      updateDOMForScroll();
+      
+      // Clear entirely for true DOM overlay
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Use Additive Blending for Cinematic Glow
+      // NOTE: 'lighter' triggers massive GPU overdraw on thousands of elements, causing lag!
+      // Switching back to 'source-over' for smooth 60fps performance while retaining aesthetics.
+      ctx.globalCompositeOperation = 'source-over';
+      
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2;
+
+      // Phase 0: 0.0 - 0.2 (Zoom out planets)
+      // Phase 1: 0.2 - 0.4 (Zoom out Solar System)
+      // Phase 2: 0.4 - 0.55 (Zoom out Milky Way)
+      // Phase 3: 0.55 - 0.70 (Warp speed)
+      // Phase 4: 0.70 - 0.85 (Cosmic Web)
+      // Phase 5: 0.85 - 1.0 (Form Text) - Slower and longer
+
+      // Draw subtle radial gradient behind text if forming
+      if (spaceScrollProgress > 0.85) {
+          const textFactor = (spaceScrollProgress - 0.85) / 0.15;
+          const bgGradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, canvas.width/3);
+          bgGradient.addColorStop(0, `rgba(10, 30, 60, ${textFactor * 0.3})`);
+          bgGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+          
+          ctx.globalCompositeOperation = 'source-over'; // Normal blend for bg
+          ctx.fillStyle = bgGradient;
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.globalCompositeOperation = 'lighter'; // Back to Additive
+      }
+
+      stars.forEach((star, i) => {
+        let drawX, drawY, drawZ, scale;
+        
+        if (spaceScrollProgress < 0.65) {
+          // --- Phase 0-5: Hide Canvas stars, wait for Milky Way to shrink ---
+          star.originX = star.x;
+          star.originY = star.y;
+          star.originZ = star.z;
+          
+        } else if (spaceScrollProgress < 0.75) {
+          // --- Phase 6: Warp Speed (0.65 -> 0.75) ---
+          const p1 = (spaceScrollProgress - 0.65) / 0.10; // 0 to 1
+          const warpFactor = (1 - p1) * 6 + 0.2; // max at 0, slow at 1
+          
+          // Move forward in Z space
+          star.z -= 50 * warpFactor;
+          
+          // Reset if passed camera
+          if (star.z < 10) {
+             star.z = 2000;
+             star.x = (Math.random() - 0.5) * canvas.width * 4;
+             star.y = (Math.random() - 0.5) * canvas.height * 4;
+          }
+          
+          scale = focalLength / star.z;
+          const px = star.x * scale + cx;
+          const py = star.y * scale + cy;
+          
+          // Calculate previous position for streak
+          const prevZ = star.z + 100 * warpFactor;
+          const prevScale = focalLength / prevZ;
+          const ppx = star.x * prevScale + cx;
+          const ppy = star.y * prevScale + cy;
+          
+          // Fade in based on local progress
+          const alpha = Math.max(0, Math.min(1, p1 * 5) * (1 - star.z/2000));
+          
+          ctx.globalAlpha = alpha;
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = star.baseSize * scale * 2;
+          ctx.beginPath();
+          ctx.moveTo(px, py);
+          ctx.lineTo(ppx, ppy);
+          ctx.stroke();
+          
+          // Store origin for next phase
+          star.originX = star.x;
+          star.originY = star.y;
+          star.originZ = star.z;
+          
+        } else if (spaceScrollProgress < 0.80) {
+          // --- Phase 7: Fluid Cosmic Web (0.75 -> 0.80) ---
+          // Fluid motion using sine waves
+          star.originX += Math.sin(time.current + star.offset) * 0.5;
+          star.originY += Math.cos(time.current * 0.8 + star.offset) * 0.5;
+          star.originZ += Math.sin(time.current * 0.5 + star.offset) * 1.0;
+          
+          scale = focalLength / star.originZ;
+          drawX = star.originX * scale + cx;
+          drawY = star.originY * scale + cy;
+          
+          const alpha = Math.max(0, 1 - (star.originZ / 2000));
+          
+          ctx.globalAlpha = alpha;
+          ctx.fillStyle = '#ffffff';
+          const size = star.baseSize * scale * 2;
+          ctx.fillRect(drawX - size/2, drawY - size/2, size, size);
+          
+          // Draw Web Lines occasionally
+          if (i % 8 === 0 && i < stars.length - 10) {
+              const neighbor = stars[i+3];
+              const nScale = focalLength / neighbor.originZ;
+              const nX = neighbor.originX * nScale + cx;
+              const nY = neighbor.originY * nScale + cy;
+              const dist = Math.hypot(drawX - nX, drawY - nY);
+              
+              if (dist < 80) {
+                  ctx.globalAlpha = alpha * (1 - dist/80) * 0.5;
+                  ctx.lineWidth = 0.5;
+                  ctx.beginPath();
+                  ctx.moveTo(drawX, drawY);
+                  ctx.lineTo(nX, nY);
+                  ctx.stroke();
+              }
+          }
+          
+        } else {
+          // --- Phase 8: Magnetic Constellation Text & Galaxy Swirl (0.80 -> 1.0) ---
+          const textFactor = (spaceScrollProgress - 0.80) / 0.20; // 0 to 1
+          
+          // Expo InOut easing for magnetic snap
+          const ease = textFactor < 0.5 ? 2 * textFactor * textFactor : 1 - Math.pow(-2 * textFactor + 2, 2) / 2;
+          
+          // Fluid drift overlay
+          const driftX = Math.sin(time.current * 2 + star.offset) * 10 * (1 - ease);
+          const driftY = Math.cos(time.current * 2 + star.offset) * 10 * (1 - ease);
+          
+          // Parabolic swirl intensity: 0 at start (no snapping), peaks at 1 (middle), 0 at end
+          const swirlIntensity = 4 * ease * (1 - ease);
+          
+          // Swirl Trajectory
+          const distToDest = 1 - ease;
+          const spinAngle = distToDest * Math.PI * 3; // 1.5 rotations
+          let swirlX = 0, swirlY = 0, swirlZ = 0;
+          
+          if (star.isTextPart) {
+              swirlX = Math.cos(spinAngle + star.offset) * 300 * swirlIntensity;
+              swirlY = Math.sin(spinAngle + star.offset) * 300 * swirlIntensity;
+              swirlZ = Math.sin(spinAngle * 0.5 + star.offset) * 400 * swirlIntensity;
+          } else {
+              // Background stars form a massive swirling galaxy around the text
+              swirlX = Math.cos(spinAngle * 0.5 + star.offset) * 800 * swirlIntensity;
+              swirlY = Math.sin(spinAngle * 0.5 + star.offset) * 800 * swirlIntensity;
+          }
+          
+          const curX = star.originX + (star.destX - star.originX) * ease + driftX + swirlX;
+          const curY = star.originY + (star.destY - star.originY) * ease + driftY + swirlY;
+          const curZ = star.originZ + (star.destZ - star.originZ) * ease + swirlZ;
+          
+          if (curZ < 5) return; // Fix: Prevent negative radius error when stars swirl behind the camera
+          
+          scale = focalLength / curZ;
+          drawX = curX * scale + cx;
+          drawY = curY * scale + cy;
+          
+          let alpha = 1 - (curZ / 2000);
+          if (!star.isTextPart) alpha *= (1 - ease * 0.5); // Fade background stars slightly, but keep them visible
+          ctx.globalAlpha = Math.max(0, alpha);
+          ctx.fillStyle = '#ffffff';
+          
+          const baseDrawSize = star.baseSize * scale * (star.isTextPart ? 1 + ease * 0.5 : 1);
+          
+          if (star.isTextPart && textFactor > 0.7) {
+              // Fast Node Glowing
+              const glowStrength = (textFactor - 0.7) / 0.3; // 0 to 1
+              const glowSize = baseDrawSize * 3;
+              
+              ctx.globalAlpha = Math.max(0, alpha * 0.2 * glowStrength);
+              ctx.fillRect(drawX - glowSize/2, drawY - glowSize/2, glowSize, glowSize);
+              ctx.globalAlpha = Math.max(0, alpha);
+          }
+          
+          ctx.fillRect(drawX - baseDrawSize/2, drawY - baseDrawSize/2, baseDrawSize, baseDrawSize);
+          
+          // Draw Constellation Lines
+          if (star.isTextPart && textFactor > 0.85 && i % 2 === 0 && i < stars.length - 1) {
+              const nextStar = stars[i+1];
+              if (nextStar && nextStar.isTextPart) {
+                  // Swirl Z for the next star to connect accurately
+                  const nSwirlZ = Math.sin(spinAngle * 0.5 + nextStar.offset) * 400 * distToDest;
+                  const nCurZ = nextStar.originZ + (nextStar.destZ - nextStar.originZ) * ease + nSwirlZ;
+                  if (nCurZ < 5) return;
+                  
+                  const nScale = focalLength / nCurZ;
+                  
+                  const nSwirlX = Math.cos(spinAngle + nextStar.offset) * 300 * distToDest;
+                  const nSwirlY = Math.sin(spinAngle + nextStar.offset) * 300 * distToDest;
+                  const nDriftX = Math.sin(time.current * 2 + nextStar.offset) * 10 * (1 - ease);
+                  const nDriftY = Math.cos(time.current * 2 + nextStar.offset) * 10 * (1 - ease);
+                  
+                  const nDrawX = (nextStar.originX + (nextStar.destX - nextStar.originX) * ease + nDriftX + nSwirlX) * nScale + cx;
+                  const nDrawY = (nextStar.originY + (nextStar.destY - nextStar.originY) * ease + nDriftY + nSwirlY) * nScale + cy;
+                  
+                  const distNode = Math.hypot(drawX - nDrawX, drawY - nDrawY);
+                  
+                  if (distNode < 120 * (1 - ease * 0.5)) {
+                      ctx.globalAlpha = Math.max(0, alpha * (1 - distNode/120) * 0.6);
+                      ctx.fillStyle = '#ffffff';
+                      const lineW = 1;
+                      // Fast line using narrow rect
+                      const angle = Math.atan2(nDrawY - drawY, nDrawX - drawX);
+                      ctx.save();
+                      ctx.translate(drawX, drawY);
+                      ctx.rotate(angle);
+                      ctx.fillRect(0, -lineW/2, distNode, lineW);
+                      ctx.restore();
+                  }
+              }
+          }
+        }
+      });
+      
+      // Reset composite for next frame
+      ctx.globalCompositeOperation = 'source-over';
+      
+      requestAnimationFrame(drawCanvas);
+    };
+    
+    // Start loop
+    drawCanvas();
   }
 
 });
