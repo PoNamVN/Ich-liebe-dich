@@ -659,6 +659,24 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas(); // Initial call
     
+    // Touch support for mobile scrolling
+    let touchStartY = 0;
+    window.addEventListener('touchstart', (e) => {
+      if (isSpaceView) {
+        touchStartY = e.touches[0].clientY;
+      }
+    }, { passive: true });
+
+    window.addEventListener('touchmove', (e) => {
+      if (isSpaceView && e.touches.length === 1) {
+        e.preventDefault();
+        const currentY = e.touches[0].clientY;
+        const deltaY = touchStartY - currentY;
+        touchStartY = currentY;
+        updateScrollProgress(deltaY);
+      }
+    }, { passive: false });
+    
     // Scroll handling (0 to 1) target update
     const updateScrollProgress = (deltaY) => {
       if (!isSpaceView) return;
@@ -723,14 +741,15 @@ document.addEventListener("DOMContentLoaded", () => {
              // Phase 0: Zoom out to Solar System
              milkyWayWrapper.style.opacity = 0;
          } else if (spaceScrollProgress <= 0.25) {
-             // Phase 1: Admire Solar System (0.15 -> 0.25)
-             solarSystemWrapper.style.transform = `scale(1)`;
+             // Phase 1: Admire Solar System (0.15 -> 0.25) - Slow zoom from 1 to 0.8
+             const p = (spaceScrollProgress - 0.15) / 0.10;
+             solarSystemWrapper.style.transform = `scale(${1 - p * 0.2})`;
              solarSystemWrapper.style.opacity = 1;
              milkyWayWrapper.style.opacity = 0;
          } else if (spaceScrollProgress <= 0.35) {
-             // Phase 2: Solar System Shrinks (0.25 -> 0.35)
+             // Phase 2: Solar System Shrinks (0.25 -> 0.35) - Shrink from 0.8 to 0
              const p = (spaceScrollProgress - 0.25) / 0.10;
-             solarSystemWrapper.style.transform = `scale(${1 - p})`;
+             solarSystemWrapper.style.transform = `scale(${0.8 - p * 0.8})`;
              solarSystemWrapper.style.opacity = Math.max(0, 1 - p * 2);
              milkyWayWrapper.style.opacity = 0;
          } else if (spaceScrollProgress <= 0.45) {
@@ -740,16 +759,17 @@ document.addEventListener("DOMContentLoaded", () => {
              milkyWayWrapper.style.transform = `scale(${4 - 3 * p})`;
              milkyWayWrapper.style.opacity = p;
          } else if (spaceScrollProgress <= 0.55) {
-             // Phase 4: Admire Milky Way (0.45 -> 0.55)
+             // Phase 4: Admire Milky Way (0.45 -> 0.55) - Slow zoom from 1 to 0.8
+             const p = (spaceScrollProgress - 0.45) / 0.10;
              solarSystemWrapper.style.opacity = 0;
-             milkyWayWrapper.style.transform = `scale(1)`;
+             milkyWayWrapper.style.transform = `scale(${1 - p * 0.2})`;
              milkyWayWrapper.style.opacity = 1;
          } else if (spaceScrollProgress <= 0.65) {
-             // Phase 5: Milky Way Shrinks (0.55 -> 0.65)
+             // Phase 5: Milky Way Shrinks (0.55 -> 0.65) - Shrink from 0.8 to 0
              const p = (spaceScrollProgress - 0.55) / 0.10;
              solarSystemWrapper.style.opacity = 0;
-             milkyWayWrapper.style.transform = `scale(${1 - p})`;
-             solarSystemWrapper.style.opacity = Math.max(0, 1 - p * 2);
+             milkyWayWrapper.style.transform = `scale(${0.8 - p * 0.8})`;
+             milkyWayWrapper.style.opacity = Math.max(0, 1 - p * 2);
          } else {
              solarSystemWrapper.style.opacity = 0;
              milkyWayWrapper.style.opacity = 0;
